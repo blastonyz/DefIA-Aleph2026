@@ -1,0 +1,131 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: #0B1220;
+  --foreground: #F7FAFC;
+  --card: #0F1724;
+  --card-foreground: #F7FAFC;
+  --popover: #0F1724;
+  --popover-foreground: #F7FAFC;
+  --primary: #0B3D91;
+  --primary-foreground: #F7FAFC;
+  --secondary: #151f30;
+  --secondary-foreground: #F7FAFC;
+  --muted: #151f30;
+  --muted-foreground: #8494a7;
+  --accent: #00E5FF;
+  --accent-foreground: #0B1220;
+  --destructive: #ef4444;
+  --destructive-foreground: #F7FAFC;
+  --border: #1e2d44;
+  --input: #1e2d44;
+  --ring: #00E5FF;
+  --chart-1: #00E5FF;
+  --chart-2: #7C4DFF;
+  --chart-3: #0B3D91;
+  --chart-4: #f472b6;
+  --chart-5: #34d399;
+  --radius: 0.75rem;
+
+  /* Custom DefIA tokens */
+  --cyan: #00E5FF;
+  --purple: #7C4DFF;
+  --navy: #0B3D91;
+  --dark-bg: #0F1724;
+  --darker-bg: #0B1220;
+  --glow-cyan: 0 0 40px rgba(0, 229, 255, 0.3);
+  --glow-purple: 0 0 40px rgba(124, 77, 255, 0.3);
+}
+
+@theme inline {
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-cyan: var(--cyan);
+  --color-purple: var(--purple);
+  --color-navy: var(--navy);
+  --color-dark-bg: var(--dark-bg);
+  --color-darker-bg: var(--darker-bg);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom utilities */
+@layer utilities {
+  .text-gradient-cyan {
+    background: linear-gradient(135deg, #00E5FF, #7C4DFF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .bg-gradient-radial {
+    background: radial-gradient(ellipse at center, var(--tw-gradient-from), var(--tw-gradient-to));
+  }
+  .glow-cyan {
+    box-shadow: var(--glow-cyan);
+  }
+  .glow-purple {
+    box-shadow: var(--glow-purple);
+  }
+  .border-gradient {
+    border-image: linear-gradient(135deg, #00E5FF33, #7C4DFF33) 1;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0B1220;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e2d44;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2a3f5e;
+}

@@ -1,0 +1,27 @@
+{
+  "name": "hardhat",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "compile": "hardhat compile",
+    "copy:abis": "node scripts/copy-abis.mjs",
+    "deploy:account": "hardhat run scripts/account/deploy-account.ts --network arbitrum",
+    "deploy:gmx-executor": "hardhat run scripts/gmx/deploy-executor.ts --network arbitrum"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox-mocha-ethers": "^3.0.2",
+    "@types/chai": "^4.3.20",
+    "@types/chai-as-promised": "^8.0.2",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.19.15",
+    "chai": "^5.3.3",
+    "ethers": "^6.16.0",
+    "hardhat": "^3.1.12",
+    "typescript": "~5.8.0"
+  },
+  "dependencies": {
+    "@account-abstraction/contracts": "^0.7.0",
+    "@openzeppelin/contracts": "^5.1.0",
+    "dotenv": "^17.2.3"
+  }
+}

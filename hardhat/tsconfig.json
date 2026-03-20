@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "lib": ["es2023"],
+    "module": "nodenext",
+    "target": "es2022",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "moduleResolution": "nodenext",
+    "resolveJsonModule": true,
+    "outDir": "dist",
+    "paths": {
+      "@account-abstraction/*": ["./node_modules/@account-abstraction/*"],
+      "@openzeppelin/*": ["./node_modules/@openzeppelin/*"]
+    }
+  }
+}
