@@ -1,105 +1,64 @@
 "use client"
 
-import { Shield, Zap, Users, Cpu, BarChart3, RefreshCw } from "lucide-react"
+import { Eye, Lock, Shield, XCircle } from "lucide-react"
+import { useScrollReveal } from "@/hooks/useScrollReveal"
 
-const features = [
+const cells = [
   {
-    number: "01",
-    title: "Ultra Secure",
-    description:
-      "AI-based anomaly detection stops attacks in real time with military-grade encryption and multi-layer defense.",
-    icon: Shield,
+    Icon: Shield,
+    title: "Non-custodial",
+    body: "DEFIAR never touches your funds. Everything runs from your smart account.",
+    bg: "bg-light-tint",
   },
   {
-    number: "02",
-    title: "Lightning Fast",
-    description:
-      "AI-routing optimizes network congestion for instant transactions, enabling sub-second settlement across chains.",
-    icon: Zap,
+    Icon: Lock,
+    title: "Limits set by you",
+    body: "Autopilot can only do what you approved.",
+    bg: "bg-muted-tint",
   },
   {
-    number: "03",
-    title: "Community Driven",
-    description:
-      "Transparent governance enhanced with AI analytics for better proposal evaluation and decision-making.",
-    icon: Users,
+    Icon: Eye,
+    title: "100% transparent",
+    body: "Every move verifiable on Snowtrace.",
+    bg: "bg-muted-tint",
   },
   {
-    number: "04",
-    title: "AI Signal Engine",
-    description:
-      "Adaptive models analyze market data across protocols to generate high-confidence trading signals in real time.",
-    icon: Cpu,
-  },
-  {
-    number: "05",
-    title: "Fork Simulation",
-    description:
-      "Test any strategy on a full Ethereum fork before risking real assets. Replay, adjust, and optimize with zero cost.",
-    icon: RefreshCw,
-  },
-  {
-    number: "06",
-    title: "On-Chain Analytics",
-    description:
-      "Deep insight dashboards powered by AI give you an edge: track whale moves, liquidity shifts, and emerging trends.",
-    icon: BarChart3,
+    Icon: XCircle,
+    title: "Cancel anytime",
+    body: "One tap to pause or revoke all permissions.",
+    bg: "bg-light-tint",
   },
 ]
 
 export function Features() {
+  const ref = useScrollReveal<HTMLElement>()
+
   return (
-    <section id="features" className="relative bg-darker-bg py-24 lg:py-32">
-      {/* Background accents */}
-      <div className="pointer-events-none absolute left-0 top-1/3 h-[400px] w-[400px] rounded-full bg-purple/5 blur-[120px]" />
-      <div className="pointer-events-none absolute right-0 bottom-1/4 h-[300px] w-[300px] rounded-full bg-cyan/5 blur-[100px]" />
+    <section id="security" className="relative overflow-hidden bg-darker-bg px-6 py-20 md:py-28">
+      <div className="pointer-events-none absolute left-[12%] top-10 h-[260px] w-[260px] rounded-full bg-cyan/10 blur-[110px]" />
+      <div className="pointer-events-none absolute right-[10%] bottom-10 h-[260px] w-[260px] rounded-full bg-purple/10 blur-[110px]" />
 
-      <div className="relative mx-auto max-w-7xl px-6">
-        {/* Header */}
-        <div className="mb-16 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <h2 className="font-[family-name:var(--font-display)] text-4xl font-bold text-foreground md:text-5xl">
-              Why Choose <br />
-              <span className="text-gradient-cyan">DefIA?</span>
-            </h2>
-          </div>
-          <p className="max-w-md text-base leading-relaxed text-muted-foreground lg:text-right">
-            AI infrastructure designed to deliver a smarter, safer, and more
-            adaptive DeFi experience.
-          </p>
-        </div>
+      <div ref={ref} className="scroll-reveal relative mx-auto max-w-[720px]">
+        <h2 className="mb-10 text-center font-heading text-3xl font-bold text-foreground md:text-[40px]">
+          Your money, always yours.
+        </h2>
 
-        {/* Feature cards */}
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {features.map((feature) => {
-            const Icon = feature.icon
-            return (
-              <div
-                key={feature.number}
-                className="group relative overflow-hidden rounded-2xl border border-border/50 bg-card p-6 transition-all duration-300 hover:border-cyan/20 hover:bg-card/80"
-              >
-                {/* Hover glow */}
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-cyan/5 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-
-                <div className="relative">
-                  <div className="mb-4 flex items-center justify-between">
-                    <span className="font-mono text-xs text-muted-foreground">
-                      {feature.number}
-                    </span>
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-cyan/10 to-purple/10">
-                      <Icon size={20} className="text-cyan" />
-                    </div>
-                  </div>
-                  <h3 className="mb-2 font-[family-name:var(--font-display)] text-xl font-semibold text-foreground">
-                    {feature.title}
-                  </h3>
-                  <p className="text-sm leading-relaxed text-muted-foreground">
-                    {feature.description}
-                  </p>
-                </div>
-              </div>
-            )
-          })}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {cells.map((cell, index) => (
+            <div
+              key={cell.title}
+              className={`${cell.bg} animate-fade-up rounded-[1.5rem] border border-border/50 p-6 shadow-[0_20px_50px_rgba(160,82,45,0.12)]`}
+              style={{ animationDelay: `${index * 80}ms` }}
+            >
+              <cell.Icon size={32} className="mb-3 text-dark-accent" />
+              <h3 className="font-heading text-lg font-bold text-foreground">
+                {cell.title}
+              </h3>
+              <p className="mt-2 font-body text-sm leading-relaxed text-dark-accent">
+                {cell.body}
+              </p>
+            </div>
+          ))}
         </div>
       </div>
     </section>

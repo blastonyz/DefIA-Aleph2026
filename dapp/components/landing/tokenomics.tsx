@@ -1,10 +1,10 @@
 "use client"
 
 const segments = [
-  { label: "Public Sale", pct: 50, color: "#7C4DFF" },
-  { label: "Staking Rewards", pct: 25, color: "#00E5FF" },
-  { label: "Visits", pct: 15, color: "#0B3D91" },
-  { label: "Liquidity", pct: 10, color: "#f472b6" },
+  { label: "Public Sale", pct: 50, color: "#EA580C" },
+  { label: "Staking Rewards", pct: 25, color: "#F97316" },
+  { label: "Visits", pct: 15, color: "#A0522D" },
+  { label: "Liquidity", pct: 10, color: "#D6A86E" },
 ]
 
 function DonutChart() {

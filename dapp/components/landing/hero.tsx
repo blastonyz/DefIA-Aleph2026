@@ -25,7 +25,7 @@ export function Hero() {
         className="pointer-events-none absolute inset-0 opacity-[0.03]"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(0,229,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.3) 1px, transparent 1px)",
+            "linear-gradient(rgba(249,115,22,0.15) 1px, transparent 1px), linear-gradient(90deg, rgba(249,115,22,0.15) 1px, transparent 1px)",
           backgroundSize: "60px 60px",
         }}
       />
@@ -77,7 +77,7 @@ export function Hero() {
             >
               <a
                 href="#cta"
-                className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-lg bg-gradient-to-r from-emerald-500 via-cyan to-emerald-400 px-7 py-3.5 text-sm font-semibold text-accent-foreground transition-all hover:shadow-[0_0_30px_rgba(16,185,129,0.4)]"
+                className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-lg bg-gradient-to-r from-orange-200 via-orange-500 to-orange-700 px-7 py-3.5 text-sm font-semibold text-accent-foreground transition-all hover:shadow-[0_0_30px_rgba(249,115,22,0.5)]"
               >
                 <span className="relative z-10 flex items-center gap-2">
                   Launch Terminal

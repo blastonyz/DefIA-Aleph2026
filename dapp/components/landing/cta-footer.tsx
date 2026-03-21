@@ -33,8 +33,8 @@ export function CtaFooter() {
 
         <div className="relative mx-auto max-w-4xl px-6 text-center">
           {/* Small orb */}
-          <div className="mx-auto mb-10 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-r from-emerald-500/20 via-cyan/20 to-emerald-400/20 ring-1 ring-emerald-500/30">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-emerald-500 via-cyan to-emerald-400">
+          <div className="mx-auto mb-10 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-r from-orange-200/20 via-orange-500/20 to-orange-700/20 ring-1 ring-orange-500/30">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-r from-orange-200 via-orange-500 to-orange-700">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-darker-bg">
                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
@@ -56,7 +56,7 @@ export function CtaFooter() {
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <a
               href="#"
-              className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-lg bg-gradient-to-r from-emerald-500 via-cyan to-emerald-400 px-8 py-4 text-sm font-semibold text-accent-foreground transition-all hover:shadow-[0_0_30px_rgba(16,185,129,0.4)]"
+              className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-lg bg-gradient-to-r from-orange-200 via-orange-500 to-orange-700 px-8 py-4 text-sm font-semibold text-accent-foreground transition-all hover:shadow-[0_0_30px_rgba(249,115,22,0.5)]"
             >
               <span className="relative z-10 flex items-center gap-2">
                 Start Nodes
@@ -80,13 +80,13 @@ export function CtaFooter() {
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 px-6 py-8 md:flex-row">
           {/* Logo */}
           <a href="#" className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-r from-emerald-500 via-cyan to-emerald-400">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-r from-orange-200 via-orange-500 to-orange-700">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="text-darker-bg">
                 <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>
             </div>
-            <span className="font-[family-name:var(--font-display)] text-lg font-bold text-foreground">
-              DefIA Intelligence
+            <span className="font-heading text-lg font-bold tracking-[0.18em] text-foreground">
+              DEFIAR
             </span>
           </a>
 

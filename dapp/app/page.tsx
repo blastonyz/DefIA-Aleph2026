@@ -3,7 +3,6 @@ import {
   Hero,
   Stats,
   Features,
-  CodePreview,
   AgentConsole,
   Tokenomics,
   Roadmap,
@@ -17,7 +16,6 @@ export default function Home() {
       <Hero />
       <Stats />
       <Features />
-      <CodePreview />
       <AgentConsole />
       <Tokenomics />
       <Roadmap />

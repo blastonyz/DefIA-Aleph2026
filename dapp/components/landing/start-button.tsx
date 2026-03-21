@@ -22,7 +22,7 @@ export function StartButton({ compact = false }: StartButtonProps) {
             <button
               onClick={openConnectModal}
               type="button"
-              className="group relative overflow-hidden rounded-full bg-gradient-to-r from-emerald-500 via-cyan to-emerald-400 px-5 py-2.5 text-sm font-semibold text-accent-foreground transition-all hover:shadow-[0_0_20px_rgba(16,185,129,0.4)]"
+              className="group relative overflow-hidden rounded-full bg-gradient-to-r from-orange-200 via-orange-500 to-orange-700 px-5 py-2.5 text-sm font-semibold text-accent-foreground transition-all hover:shadow-[0_0_20px_rgba(249,115,22,0.5)]"
             >
               <span className="relative z-10">Empezar</span>
               <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />

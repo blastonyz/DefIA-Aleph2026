@@ -1,5 +1,7 @@
+"use client";
+
 import { useRef, useMemo, useCallback, useState } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+import { Canvas, useFrame, type RootState } from "@react-three/fiber";
 import * as THREE from "three";
 
 const vertexShader = /* glsl */ `
@@ -99,47 +101,47 @@ const fragmentShader = /* glsl */ `
     vec3 n = normalize(vWorldNormal);
     float fresnel = pow(1.0 - max(dot(viewDir, n), 0.0), 3.0);
 
-    // DefIA web palette — dark navy core → purple → cyan peaks
-    vec3 deepNavy  = vec3(0.043, 0.071, 0.125);  // #0B1220 darker-bg
-    vec3 navy      = vec3(0.043, 0.239, 0.569);  // #0B3D91 navy
-    vec3 purple    = vec3(0.486, 0.302, 1.0);    // #7C4DFF purple
-    vec3 cyan      = vec3(0.0,   0.898, 1.0);    // #00E5FF cyan
-    vec3 lightCyan = vec3(0.600, 0.941, 1.0);    // #99F0FF light cyan
+    // Warm orange-brown palette
+    vec3 chocolate = vec3(0.361, 0.251, 0.200);  // #5C4033 marrón oscuro — core
+    vec3 caoba     = vec3(0.627, 0.322, 0.176);  // #A0522D marrón rojizo
+    vec3 quemado   = vec3(0.918, 0.345, 0.047);  // #EA580C naranja profundo
+    vec3 brillante = vec3(0.976, 0.451, 0.086);  // #F97316 naranja brillante
+    vec3 pastel    = vec3(0.996, 0.843, 0.667);  // #FED7AA naranja suave — rim/specular
 
-    // Displacement drives color: deep navy → navy → purple → cyan peaks
+    // Displacement drives color: chocolate core → caoba → quemado → brillante peaks
     float t = vDisplacement * 1.5 + 0.5;
-    vec3 baseColor = mix(deepNavy, navy, smoothstep(0.0, 0.4, t));
-    baseColor = mix(baseColor, purple, smoothstep(0.4, 0.75, t));
-    baseColor = mix(baseColor, cyan,   smoothstep(0.75, 1.0, t));
+    vec3 baseColor = mix(chocolate, caoba,     smoothstep(0.0, 0.35, t));
+    baseColor      = mix(baseColor, quemado,   smoothstep(0.35, 0.70, t));
+    baseColor      = mix(baseColor, brillante, smoothstep(0.70, 1.0,  t));
 
-    // Fresnel rim — cyan edge glow with purple blend
-    vec3 rimColor = mix(purple, cyan, fresnel * 0.7);
-    vec3 color = mix(baseColor, rimColor, fresnel * 0.65);
+    // Fresnel rim — pastel warm glow at edges
+    vec3 rimColor = mix(quemado, pastel, fresnel * 0.75);
+    vec3 color = mix(baseColor, rimColor, fresnel * 0.60);
 
-    // Subsurface glow — purple inner warmth
+    // Subsurface glow — caoba inner warmth
     float sss = pow(max(dot(viewDir, -n), 0.0), 2.0) * 0.35;
-    color += purple * sss;
+    color += caoba * sss;
 
-    // Main specular — bright cyan highlight
+    // Main specular — pastel highlight
     vec3 lightDir = normalize(vec3(2.0, 3.0, 4.0));
     vec3 halfDir = normalize(lightDir + viewDir);
     float spec = pow(max(dot(n, halfDir), 0.0), 80.0);
-    color += lightCyan * spec * 0.8;
+    color += pastel * spec * 0.75;
 
-    // Secondary specular — fill light (purple tint)
+    // Secondary specular — fill light (naranja quemado)
     vec3 lightDir2 = normalize(vec3(-3.0, -1.0, 2.0));
     vec3 halfDir2 = normalize(lightDir2 + viewDir);
     float spec2 = pow(max(dot(n, halfDir2), 0.0), 40.0);
-    color += purple * spec2 * 0.4;
+    color += quemado * spec2 * 0.35;
 
-    // Third specular — top rim cyan
+    // Third specular — top rim brillante
     vec3 lightDir3 = normalize(vec3(0.0, 4.0, -1.0));
     vec3 halfDir3 = normalize(lightDir3 + viewDir);
     float spec3 = pow(max(dot(n, halfDir3), 0.0), 60.0);
-    color += cyan * spec3 * 0.25;
+    color += brillante * spec3 * 0.25;
 
-    // Ambient rim glow — cyan
-    color += cyan * fresnel * 0.15;
+    // Ambient rim glow — warm orange
+    color += brillante * fresnel * 0.12;
 
     gl_FragColor = vec4(color, 1.0);
   }
@@ -156,7 +158,7 @@ const Sphere = ({ dragRot }: { dragRot: React.RefObject<{ x: number; y: number }
     []
   );
 
-  useFrame(({ clock }) => {
+  useFrame(({ clock }: RootState) => {
     if (!meshRef.current) return;
     const mat = meshRef.current.material as THREE.ShaderMaterial;
     mat.uniforms.uTime.value = clock.getElapsedTime();
