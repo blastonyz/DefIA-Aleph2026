@@ -2,10 +2,11 @@ import { Navbar } from "@/components/landing/navbar"
 import {
   Hero,
   Stats,
+  Problem,
+  HowItWorks,
   Features,
   AgentConsole,
-  Tokenomics,
-  Roadmap,
+  Market,
   CtaFooter,
 } from "@/components/landing/sections"
 
@@ -15,10 +16,11 @@ export default function Home() {
       <Navbar />
       <Hero />
       <Stats />
-      <Features />
+      <Problem />
+      <HowItWorks />
       <AgentConsole />
-      <Tokenomics />
-      <Roadmap />
+      <Market />
+      <Features />
       <CtaFooter />
     </main>
   )

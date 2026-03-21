@@ -103,20 +103,20 @@ export function OhlcChart() {
 
     const chart = createChart(container, {
       width: container.clientWidth,
-      height: 280,
+      height: 375,
       layout: {
-        background: { type: ColorType.Solid, color: "#0B111B" },
-        textColor: "#93A4C4",
+        background: { type: ColorType.Solid, color: "#FFFFFF" },
+        textColor: "#7a5649",
       },
       grid: {
-        vertLines: { color: "rgba(75, 95, 130, 0.15)" },
-        horzLines: { color: "rgba(75, 95, 130, 0.15)" },
+        vertLines: { color: "rgba(164, 55, 0, 0.08)" },
+        horzLines: { color: "rgba(164, 55, 0, 0.08)" },
       },
       rightPriceScale: {
-        borderColor: "rgba(75, 95, 130, 0.4)",
+        borderColor: "rgba(164, 55, 0, 0.18)",
       },
       timeScale: {
-        borderColor: "rgba(75, 95, 130, 0.4)",
+        borderColor: "rgba(164, 55, 0, 0.18)",
       },
     });
 

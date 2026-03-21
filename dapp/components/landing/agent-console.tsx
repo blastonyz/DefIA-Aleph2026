@@ -177,6 +177,12 @@ const ERC20_ABI = [
   },
 ] as const;
 
+const warmPrimaryButtonClass =
+  "rounded-full font-bold text-sm tracking-wide bg-gradient-to-br from-[#a43700] to-[#cd4700] text-white shadow-lg shadow-[#a43700]/20 active:scale-[0.98] transition-all border-0 hover:opacity-90 disabled:opacity-50";
+
+const warmSecondaryButtonClass =
+  "rounded-full font-bold text-sm tracking-wide bg-[#fdcdbc] text-[#795548] active:scale-[0.98] transition-all border-0 hover:opacity-90 disabled:opacity-50";
+
 function getTxExplorerBase(chainId: number | undefined): string {
   if (chainId === arbitrumSepolia.id) {
     return `${arbitrumSepolia.blockExplorers.default.url}/tx/`;
@@ -949,7 +955,7 @@ export function AgentConsole() {
     return (
       <section id="agent-console" className="relative overflow-hidden bg-darker-bg py-24 lg:py-32">
         <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-cyan/10 blur-[120px]" />
-        <div className="relative mx-auto max-w-4xl px-6">
+        <div className="relative mx-auto w-full px-6 lg:w-10/12 xl:w-4/5">
           <Card className="border-border/50 bg-dark-bg/80">
             <CardHeader>
               <CardTitle className="font-[family-name:var(--font-display)] text-2xl text-foreground md:text-3xl">
@@ -967,7 +973,16 @@ export function AgentConsole() {
     <section id="agent-console" className="relative overflow-hidden bg-darker-bg py-24 lg:py-32">
       <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-cyan/10 blur-[120px]" />
 
-      <div className="relative mx-auto max-w-4xl px-6">
+      <div className="relative mx-auto mb-10 w-full px-6 lg:w-10/12 xl:w-4/5">
+        <h2 className="mb-4 text-center font-[family-name:var(--font-display)] text-2xl font-bold md:text-3xl">
+          <span className="bg-gradient-to-r from-orange-200 via-orange-500 to-orange-700 bg-clip-text text-transparent">
+            GMX Trading AI powered
+          </span>
+        </h2>
+        <OhlcChart />
+      </div>
+
+        <div className="relative mx-auto w-full px-6 lg:w-10/12 xl:w-4/5">
         <Card className="border-border/50 bg-dark-bg/80">
           <CardHeader>
             <CardTitle className="font-[family-name:var(--font-display)] text-2xl text-foreground md:text-3xl">
@@ -991,16 +1006,40 @@ export function AgentConsole() {
               </div>
 
               <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-                <Button type="button" variant={selectedAction === "long" ? "default" : "secondary"} onClick={() => onManualAction("long")} disabled={isExecuting || isAutoLoading || userOpStatus === "pending"}>
+                <Button
+                  type="button"
+                  variant={selectedAction === "long" ? "default" : "secondary"}
+                  className={selectedAction === "long" ? `h-auto py-3 ${warmPrimaryButtonClass}` : `h-auto py-3 ${warmSecondaryButtonClass}`}
+                  onClick={() => onManualAction("long")}
+                  disabled={isExecuting || isAutoLoading || userOpStatus === "pending"}
+                >
                   Long
                 </Button>
-                <Button type="button" variant={selectedAction === "short" ? "default" : "secondary"} onClick={() => onManualAction("short")} disabled={isExecuting || isAutoLoading || userOpStatus === "pending"}>
+                <Button
+                  type="button"
+                  variant={selectedAction === "short" ? "default" : "secondary"}
+                  className={selectedAction === "short" ? `h-auto py-3 ${warmPrimaryButtonClass}` : `h-auto py-3 ${warmSecondaryButtonClass}`}
+                  onClick={() => onManualAction("short")}
+                  disabled={isExecuting || isAutoLoading || userOpStatus === "pending"}
+                >
                   Short
                 </Button>
-                <Button type="button" variant={selectedAction === "close" ? "default" : "secondary"} onClick={() => onManualAction("close")} disabled={isExecuting || isAutoLoading || userOpStatus === "pending"}>
+                <Button
+                  type="button"
+                  variant={selectedAction === "close" ? "default" : "secondary"}
+                  className={selectedAction === "close" ? `h-auto py-3 ${warmPrimaryButtonClass}` : `h-auto py-3 ${warmSecondaryButtonClass}`}
+                  onClick={() => onManualAction("close")}
+                  disabled={isExecuting || isAutoLoading || userOpStatus === "pending"}
+                >
                   Close
                 </Button>
-                <Button type="button" variant="outline" onClick={requestAutoAction} disabled={isAutoLoading || isExecuting || userOpStatus === "pending"}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  className={`h-auto py-3 ${warmPrimaryButtonClass}`}
+                  onClick={requestAutoAction}
+                  disabled={isAutoLoading || isExecuting || userOpStatus === "pending"}
+                >
                   {isAutoLoading || isExecuting ? (
                     <span className="inline-flex items-center gap-2">
                       <Spinner />
@@ -1032,9 +1071,13 @@ export function AgentConsole() {
                 className="min-h-32"
               />
 
-              <Button type="submit" className="w-full" disabled={isLoading || prompt.trim().length === 0}>
+              <Button
+                type="submit"
+                className={`block w-full md:mx-auto md:w-[20vw] md:min-w-[180px] md:max-w-[280px] ${warmPrimaryButtonClass}`}
+                disabled={isLoading || prompt.trim().length === 0}
+              >
                 {isLoading ? (
-                  <span className="inline-flex items-center gap-2">
+                  <span className="inline-flex justify-center items-center gap-2">
                     <Spinner />
                     Consultando Moltbot...
                   </span>
@@ -1044,7 +1087,8 @@ export function AgentConsole() {
               </Button>
             </form>
 
-            <div className="mt-6 rounded-lg border border-border/50 bg-darker-bg p-4">
+            <div className="mt-6 grid gap-6 xl:grid-cols-2">
+              <div className="rounded-lg border border-border/50 bg-darker-bg p-4">
               <p className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">
                 Respuesta{provider ? ` · provider: ${provider}` : ""}
               </p>
@@ -1055,7 +1099,7 @@ export function AgentConsole() {
               ) : (
                 <p className="text-sm text-muted-foreground">Aún no hay respuesta.</p>
               )}
-            </div>
+              </div>
 
             <div className="mt-6 rounded-lg border border-border/50 bg-darker-bg p-4">
               <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
@@ -1064,7 +1108,7 @@ export function AgentConsole() {
                   <p className="text-sm text-muted-foreground">Elegí un preset o ajustá market, collateral y montos antes de ejecutar.</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  <Button type="button" variant="secondary" onClick={() => applyGmxPreset(FUJI_WETH_USDC_PRESET)}>
+                  <Button type="button" variant="secondary" className={`h-auto px-5 py-2.5 ${warmSecondaryButtonClass}`} onClick={() => applyGmxPreset(FUJI_WETH_USDC_PRESET)}>
                     {FUJI_WETH_USDC_PRESET.label}
                   </Button>
                 </div>
@@ -1103,148 +1147,226 @@ export function AgentConsole() {
               )}
             </div>
 
-            <div className="mt-6 rounded-lg border border-border/50 bg-darker-bg p-4">
-              <div className="mb-3 flex items-center justify-between gap-3">
-                <p className="text-xs uppercase tracking-wide text-muted-foreground">Executor Check</p>
-                <Button type="button" variant="outline" onClick={() => void loadExecutorHealth()} disabled={isExecutorHealthLoading || !contracts.executor}>
-                  {isExecutorHealthLoading ? (
-                    <span className="inline-flex items-center gap-2"><Spinner />Actualizando...</span>
-                  ) : (
-                    "Refresh"
-                  )}
-                </Button>
-              </div>
-              {executorHealthError ? (
-                <pre className="mb-3 max-h-48 overflow-auto whitespace-pre-wrap break-all text-xs text-red-400">{executorHealthError}</pre>
-              ) : null}
-              {executorHealth ? (
-                <div className="space-y-2">
-                  <p className="text-sm text-foreground">Executor: {contracts.executor}</p>
-                  <p className="text-sm text-muted-foreground">Balance AVAX: {formatEther(executorHealth.nativeBalance)}</p>
-                  <p className="text-sm text-muted-foreground">Execution fee: {executorHealth.executionFee !== null ? formatEther(executorHealth.executionFee) : "N/A"}</p>
-                  <p className="text-sm text-muted-foreground">Forwarder: {executorHealth.forwarder ?? "N/A"}</p>
-                  <p className="text-sm text-muted-foreground">Router spender: {executorHealth.routerSpender ?? "N/A"}</p>
-                  <p className="text-sm text-muted-foreground">Collateral token: {executorHealth.collateralTokenAddress ?? "No configurado"}</p>
-                  <p className={`text-sm font-medium ${executorHealth.collateralBalance !== null && executorHealth.collateralBalance > 0n ? "text-green-400" : "text-red-400"}`}>
-                    Balance colateral: {formatTokenAmount(executorHealth.collateralBalance, executorHealth.collateralTokenDecimals)}{executorHealth.collateralTokenSymbol ? ` ${executorHealth.collateralTokenSymbol}` : ""}{" "}
-                    {executorHealth.collateralBalance !== null ? (executorHealth.collateralBalance > 0n ? "✓ OK" : "✗ Balance 0") : ""}
-                  </p>
-                  <p className="text-sm text-muted-foreground">Allowance al router: {formatTokenAmount(executorHealth.tokenAllowance, executorHealth.collateralTokenDecimals)}{executorHealth.collateralTokenSymbol ? ` ${executorHealth.collateralTokenSymbol}` : ""}</p>
-                  {executorHealth.recentExecution ? (
-                    <div className="rounded-md border border-border/50 bg-dark-bg/60 p-3 text-xs text-muted-foreground">
-                      <p className="text-foreground">Ultima ejecucion: {describeAction(executorHealth.recentExecution.action)} · orderKey {formatShortHash(executorHealth.recentExecution.orderKey)}</p>
-                      <p>Tx: {formatShortHash(executorHealth.recentExecution.txHash)} · bloque {executorHealth.recentExecution.blockNumber.toString()}</p>
-                      <p>sizeDeltaUsd: {executorHealth.recentExecution.sizeDeltaUsd.toString()} · direccion: {executorHealth.recentExecution.isLong ? "LONG" : "SHORT"}</p>
-                      {executorHealth.collateralBalance === 0n ? (
-                        <p className="text-amber-300">El colateral del executor ya fue consumido por la ultima orden de GMX. Ver 0 {executorHealth.collateralTokenSymbol ?? "TOKEN"} despues de una ejecucion exitosa es esperado.</p>
-                      ) : null}
-                    </div>
-                  ) : null}
-                  {executorHealth.executionFee !== null ? (
-                    <p className={`text-sm ${executorHealth.nativeBalance >= executorHealth.executionFee ? "text-green-400" : "text-amber-400"}`}>
-                      {executorHealth.nativeBalance >= executorHealth.executionFee
-                        ? "Balance AVAX suficiente para el executionFee actual"
-                        : "Falta AVAX en el executor para cubrir el executionFee actual"}
-                    </p>
-                  ) : null}
-                  <div className="flex flex-wrap items-center gap-3 pt-2">
-                    <Button type="button" variant="secondary" onClick={fundExecutor} disabled={isFundingExecutor || !isConnected || !walletClient}>
-                      {isFundingExecutor ? (
-                        <span className="inline-flex items-center gap-2"><Spinner />Fondeando...</span>
-                      ) : (
-                        "Fondear executor +0.03 AVAX"
-                      )}
-                    </Button>
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      onClick={fundExecutorCollateral}
-                      disabled={
-                        isFundingCollateral ||
-                        !isConnected ||
-                        !walletClient ||
-                        !executorHealth.collateralTokenAddress
-                      }
-                    >
-                      {isFundingCollateral ? (
-                        <span className="inline-flex items-center gap-2"><Spinner />Fondeando colateral...</span>
-                      ) : (
-                        `${connectedChainId === avalancheFuji.id ? "Mint" : "Fondear"} executor +${EXECUTOR_COLLATERAL_TOP_UP_AMOUNT} ${executorHealth.collateralTokenSymbol ?? "token"}`
-                      )}
-                    </Button>
-                    {executorFundingTxHash ? (
-                      <a
-                        className="text-xs text-cyan underline-offset-4 hover:underline"
-                        href={`${getTxExplorerBase(connectedChainId)}${executorFundingTxHash}`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Funding tx: {executorFundingTxHash}
-                      </a>
-                    ) : null}
-                    {executorCollateralFundingTxHash ? (
-                      <a
-                        className="text-xs text-cyan underline-offset-4 hover:underline"
-                        href={`${getTxExplorerBase(connectedChainId)}${executorCollateralFundingTxHash}`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        Collateral tx: {executorCollateralFundingTxHash}
-                      </a>
-                    ) : null}
-                  </div>
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">Sin datos del executor todavía.</p>
-              )}
-            </div>
-
-            <div className="mt-6 rounded-lg border border-border/50 bg-darker-bg p-4">
-              <p className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">Estado de ejecución</p>
-              {executionError ? (
-                <pre className="max-h-64 overflow-auto whitespace-pre-wrap break-all text-xs text-red-400">{executionError}</pre>
-              ) : lastUserOpHash ? (
-                <div className="space-y-2">
-                  <a
-                    className="block text-sm text-cyan underline-offset-4 hover:underline"
-                    href={`${getUserOpExplorerBase(connectedChainId)}${lastUserOpHash}`}
-                    target="_blank"
-                    rel="noreferrer"
+              <div className="mt-6">
+                <div className="mb-4 flex items-center justify-between">
+                  <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#7a5649]">Executor Check</h2>
+                  <button
+                    type="button"
+                    onClick={() => void loadExecutorHealth()}
+                    disabled={isExecutorHealthLoading || !contracts.executor}
+                    className="flex items-center gap-1.5 text-[#a43700] font-bold text-xs hover:opacity-80 transition-opacity disabled:opacity-40"
                   >
-                    UserOp: {lastUserOpHash}
-                  </a>
-                  <p className="text-sm text-muted-foreground">
-                    Estado: {userOpStatus === "included" ? "INCLUDED" : userOpStatus === "pending" ? "PENDING" : userOpStatus === "failed" ? "FAILED" : "IDLE"}
-                  </p>
-                  {executionTxHash ? (
+                    {isExecutorHealthLoading ? <Spinner /> : (
+                      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
+                        <path d="M21 3v5h-5"/>
+                        <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
+                        <path d="M8 16H3v5"/>
+                      </svg>
+                    )}
+                    {isExecutorHealthLoading ? "Actualizando..." : "Refresh"}
+                  </button>
+                </div>
+                <div className="bg-[#faf4df] rounded-3xl p-6 shadow-sm flex flex-col gap-6">
+                  {executorHealthError ? (
+                    <pre className="max-h-48 overflow-auto whitespace-pre-wrap break-all text-xs text-red-500">{executorHealthError}</pre>
+                  ) : null}
+                  {executorHealth ? (
+                    <>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="bg-[#f4eed9] p-4 rounded-2xl flex flex-col gap-1 border-b-2 border-[#a43700]/10">
+                          <span className="text-[10px] font-bold text-[#5a4138] uppercase">AVAX Balance</span>
+                          <div className="flex items-baseline gap-1">
+                            <span className="text-xl font-extrabold text-[#1e1c0f]">{formatEther(executorHealth.nativeBalance)}</span>
+                            <span className="text-[10px] font-bold text-[#7a5649]">AVAX</span>
+                          </div>
+                        </div>
+                        <div className="bg-[#f4eed9] p-4 rounded-2xl flex flex-col gap-1 border-b-2 border-[#a43700]/10">
+                          <span className="text-[10px] font-bold text-[#5a4138] uppercase">{executorHealth.collateralTokenSymbol ?? "Colateral"}</span>
+                          <div className="flex items-baseline gap-1">
+                            <span className={`text-xl font-extrabold ${executorHealth.collateralBalance !== null && executorHealth.collateralBalance > 0n ? "text-[#1e1c0f]" : "text-red-500"}`}>
+                              {formatTokenAmount(executorHealth.collateralBalance, executorHealth.collateralTokenDecimals)}
+                            </span>
+                            <span className="text-[10px] font-bold text-[#7a5649]">{executorHealth.collateralTokenSymbol ?? ""}</span>
+                          </div>
+                          {executorHealth.collateralBalance !== null && (
+                            <span className={`text-[10px] font-bold ${executorHealth.collateralBalance > 0n ? "text-emerald-600" : "text-red-500"}`}>
+                              {executorHealth.collateralBalance > 0n ? "✓ OK" : "✗ Balance 0"}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      {executorHealth.executionFee !== null ? (
+                        <div className="flex items-center justify-between px-1">
+                          <div className="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#805200" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/>
+                              <path d="M14 8H8"/><path d="M16 12H8"/><path d="M13 16H8"/>
+                            </svg>
+                            <span className="text-sm font-medium text-[#5a4138]">Execution fee</span>
+                          </div>
+                          <span className={`text-sm font-bold ${executorHealth.nativeBalance >= executorHealth.executionFee ? "text-emerald-600" : "text-amber-600"}`}>
+                            {formatEther(executorHealth.executionFee)} AVAX
+                          </span>
+                        </div>
+                      ) : null}
+                      <div className="flex items-center justify-between px-1">
+                        <span className="text-sm font-medium text-[#5a4138]">Allowance al router</span>
+                        <span className="text-sm font-bold text-[#1e1c0f]">
+                          {formatTokenAmount(executorHealth.tokenAllowance, executorHealth.collateralTokenDecimals)}{executorHealth.collateralTokenSymbol ? ` ${executorHealth.collateralTokenSymbol}` : ""}
+                        </span>
+                      </div>
+                      {executorHealth.recentExecution ? (
+                        <div className="rounded-2xl bg-[#f4eed9] p-4 text-xs text-[#5a4138] flex flex-col gap-1.5">
+                          <p className="font-bold text-[#1e1c0f]">
+                            Última ejecución: {describeAction(executorHealth.recentExecution.action)} · {formatShortHash(executorHealth.recentExecution.orderKey)}
+                          </p>
+                          <p>Tx: {formatShortHash(executorHealth.recentExecution.txHash)} · bloque {executorHealth.recentExecution.blockNumber.toString()}</p>
+                          <p>sizeDeltaUsd: {executorHealth.recentExecution.sizeDeltaUsd.toString()} · {executorHealth.recentExecution.isLong ? "LONG" : "SHORT"}</p>
+                          {executorHealth.collateralBalance === 0n ? (
+                            <p className="text-amber-600 font-medium">Colateral consumido por la última orden GMX — esperado tras ejecución exitosa.</p>
+                          ) : null}
+                        </div>
+                      ) : null}
+                      <div className="flex flex-col gap-3">
+                        <Button
+                          type="button"
+                          onClick={fundExecutor}
+                          disabled={isFundingExecutor || !isConnected || !walletClient}
+                          className={`w-full py-4 h-auto ${warmPrimaryButtonClass}`}
+                        >
+                          {isFundingExecutor ? (
+                            <span className="inline-flex items-center gap-2"><Spinner />Fondeando...</span>
+                          ) : (
+                            "Fondear executor +0.03 AVAX"
+                          )}
+                        </Button>
+                        <Button
+                          type="button"
+                          onClick={fundExecutorCollateral}
+                          disabled={isFundingCollateral || !isConnected || !walletClient || !executorHealth.collateralTokenAddress}
+                          className={`w-full py-4 h-auto ${warmSecondaryButtonClass}`}
+                        >
+                          {isFundingCollateral ? (
+                            <span className="inline-flex items-center gap-2"><Spinner />Fondeando colateral...</span>
+                          ) : (
+                            `${connectedChainId === avalancheFuji.id ? "Mint" : "Fondear"} executor +${EXECUTOR_COLLATERAL_TOP_UP_AMOUNT} ${executorHealth.collateralTokenSymbol ?? "token"}`
+                          )}
+                        </Button>
+                        {executorFundingTxHash ? (
+                          <a
+                            className="text-xs text-[#a43700] underline-offset-4 hover:underline text-center"
+                            href={`${getTxExplorerBase(connectedChainId)}${executorFundingTxHash}`}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            Funding tx: {executorFundingTxHash}
+                          </a>
+                        ) : null}
+                        {executorCollateralFundingTxHash ? (
+                          <a
+                            className="text-xs text-[#a43700] underline-offset-4 hover:underline text-center"
+                            href={`${getTxExplorerBase(connectedChainId)}${executorCollateralFundingTxHash}`}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            Collateral tx: {executorCollateralFundingTxHash}
+                          </a>
+                        ) : null}
+                      </div>
+                    </>
+                  ) : (
+                    <p className="text-sm text-center italic text-[#5a4138]/60 py-4">Sin datos del executor todavía.</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="rounded-3xl bg-[#faf4df] p-6 shadow-sm">
+                <div className="mb-4 flex items-center justify-between gap-3">
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#7a5649]">Estado de ejecución</p>
+                  <span
+                    className={`rounded-full px-2.5 py-1 text-[10px] font-bold tracking-wide ${
+                      userOpStatus === "included"
+                        ? "bg-emerald-100 text-emerald-700"
+                        : userOpStatus === "pending"
+                          ? "bg-amber-100 text-amber-700"
+                          : userOpStatus === "failed"
+                            ? "bg-red-100 text-red-700"
+                            : "bg-[#ffddb4] text-[#633f00]"
+                    }`}
+                  >
+                    {userOpStatus === "included" ? "INCLUDED" : userOpStatus === "pending" ? "PENDING" : userOpStatus === "failed" ? "FAILED" : "IDLE"}
+                  </span>
+                </div>
+
+                {executionError ? (
+                  <pre className="max-h-64 overflow-auto whitespace-pre-wrap break-all rounded-2xl bg-[#ffdad6] p-4 text-xs text-[#93000a]">{executionError}</pre>
+                ) : lastUserOpHash ? (
+                  <div className="space-y-3">
                     <a
-                      className="block text-sm text-cyan underline-offset-4 hover:underline"
-                      href={`${getTxExplorerBase(connectedChainId)}${executionTxHash}`}
+                      className="flex items-center justify-between rounded-2xl bg-[#f4eed9] p-4 text-sm font-semibold text-[#a43700] underline-offset-4 hover:underline"
+                      href={`${getUserOpExplorerBase(connectedChainId)}${lastUserOpHash}`}
                       target="_blank"
                       rel="noreferrer"
                     >
-                      Tx: {executionTxHash}
+                      <span>UserOp</span>
+                      <span>{formatShortHash(lastUserOpHash as Hex)}</span>
                     </a>
-                  ) : null}
-                  {executionBlockNumber ? (
-                    <p className="text-sm text-muted-foreground">Bloque: {executionBlockNumber}</p>
-                  ) : null}
-                  {gmxTradeData ? (
-                    <div className="space-y-1 pt-2">
-                      <p className="text-xs uppercase tracking-wide text-muted-foreground">GMX Trade Data</p>
-                      <p className="text-sm text-foreground">action: {gmxTradeData.action}</p>
-                      <p className="break-all text-xs text-muted-foreground">metadataHash: {gmxTradeData.metadataHash}</p>
-                      <p className="break-all text-xs text-muted-foreground">reportHash: {gmxTradeData.reportHash}</p>
-                      <p className="text-sm text-muted-foreground">executionCount: {gmxTradeData.executionCount}</p>
-                    </div>
-                  ) : null}
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">Sin ejecución reciente.</p>
-              )}
-            </div>
 
-            <OhlcChart />
+                    <div className="grid gap-3 grid-cols-1">
+                      {executionTxHash ? (
+                        <a
+                          className="flex items-center justify-between rounded-2xl bg-[#f4eed9] p-4 text-sm font-semibold text-[#a43700] underline-offset-4 hover:underline"
+                          href={`${getTxExplorerBase(connectedChainId)}${executionTxHash}`}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <span>Tx</span>
+                          <span>{formatShortHash(executionTxHash as Hex)}</span>
+                        </a>
+                      ) : (
+                        <div className="rounded-2xl bg-[#f4eed9] p-4 text-sm text-[#5a4138]">Tx pendiente de confirmación</div>
+                      )}
+
+                      {executionBlockNumber ? (
+                        <div className="rounded-2xl bg-[#f4eed9] p-4 text-sm text-[#1e1c0f]">
+                          <span className="block text-[10px] uppercase tracking-wide text-[#7a5649]">Bloque</span>
+                          <span className="font-bold">{executionBlockNumber}</span>
+                        </div>
+                      ) : (
+                        <div className="rounded-2xl bg-[#f4eed9] p-4 text-sm text-[#5a4138]">Bloque no disponible aún</div>
+                      )}
+                    </div>
+
+                    {gmxTradeData ? (
+                      <div className="rounded-2xl bg-[#f4eed9] p-4">
+                        <p className="mb-3 text-[10px] font-bold uppercase tracking-[0.18em] text-[#7a5649]">GMX Trade Data</p>
+                        <div className="grid gap-2 grid-cols-1">
+                          <div className="rounded-xl bg-[#fff9e7] px-3 py-2 text-xs text-[#5a4138]">
+                            <span className="block text-[10px] uppercase tracking-wide text-[#7a5649]">Action</span>
+                            <span className="font-semibold text-[#1e1c0f]">{gmxTradeData.action}</span>
+                          </div>
+                          <div className="rounded-xl bg-[#fff9e7] px-3 py-2 text-xs text-[#5a4138]">
+                            <span className="block text-[10px] uppercase tracking-wide text-[#7a5649]">Execution count</span>
+                            <span className="font-semibold text-[#1e1c0f]">{gmxTradeData.executionCount}</span>
+                          </div>
+                          <div className="rounded-xl bg-[#fff9e7] px-3 py-2 text-xs text-[#5a4138]">
+                            <span className="block text-[10px] uppercase tracking-wide text-[#7a5649]">metadataHash</span>
+                            <span className="font-semibold text-[#1e1c0f]">{formatShortHash(gmxTradeData.metadataHash)}</span>
+                          </div>
+                          <div className="rounded-xl bg-[#fff9e7] px-3 py-2 text-xs text-[#5a4138]">
+                            <span className="block text-[10px] uppercase tracking-wide text-[#7a5649]">reportHash</span>
+                            <span className="font-semibold text-[#1e1c0f]">{formatShortHash(gmxTradeData.reportHash)}</span>
+                          </div>
+                        </div>
+                      </div>
+                    ) : null}
+                  </div>
+                ) : (
+                  <p className="rounded-2xl bg-[#f4eed9] p-4 text-sm italic text-[#5a4138]/70">Sin ejecución reciente.</p>
+                )}
+              </div>
+            </div>
 
             <div className="mt-6 rounded-lg border border-border/50 bg-darker-bg p-4">
               <p className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">Session Key</p>
@@ -1259,6 +1381,7 @@ export function AgentConsole() {
                   <Button
                     type="button"
                     variant="secondary"
+                    className={`h-auto px-5 py-2.5 ${warmPrimaryButtonClass}`}
                     disabled={isSessionLoading || !isConnected || !contracts.smartAccount}
                     onClick={() => createSession(contracts)}
                   >
@@ -1269,7 +1392,7 @@ export function AgentConsole() {
                     )}
                   </Button>
                 ) : (
-                  <Button type="button" variant="outline" onClick={revokeSession}>
+                  <Button type="button" variant="outline" className={`h-auto px-5 py-2.5 ${warmSecondaryButtonClass}`} onClick={revokeSession}>
                     Revocar
                   </Button>
                 )}
