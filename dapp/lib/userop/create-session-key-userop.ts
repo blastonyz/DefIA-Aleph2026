@@ -224,15 +224,7 @@ async function deriveSender(
   config: ContractsConfig,
   owner: Hex
 ): Promise<{ sender: Hex; accountExists: boolean }> {
-  const accountAddress = config.smartAccount as Hex;
   const factoryAddress = config.factory as Hex;
-
-  const bytecode = await publicClient.getCode({ address: accountAddress });
-  const accountExists = !!bytecode && bytecode !== "0x";
-
-  if (accountExists) {
-    return { sender: accountAddress, accountExists: true };
-  }
 
   const factoryData = encodeFunctionData({
     abi: AccountFactoryArtifact.abi,

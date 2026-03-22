@@ -178,39 +178,28 @@ export async function executeTradeUserOp(params: {
     chainId: publicClient.chain?.id,
   });
 
-  const configuredSmartAccount = toAddressHex(contracts.smartAccount);
-
   const factoryData = encodeFunctionData({
     abi: AccountFactoryArtifact.abi,
     functionName: "createAccount",
     args: [address],
   });
+  const senderCall = await publicClient.call({
+    to: factoryAddress,
+    data: factoryData,
+  });
 
-  const configuredAccountBytecode = await publicClient.getCode({ address: configuredSmartAccount });
-  const configuredAccountExists = !!configuredAccountBytecode && configuredAccountBytecode !== "0x";
-
-  let sender = configuredSmartAccount;
-  let accountExists = configuredAccountExists;
-
-  if (!accountExists) {
-    const senderCall = await publicClient.call({
-      to: factoryAddress,
-      data: factoryData,
-    });
-
-    if (!senderCall.data) {
-      throw new Error("AccountFactory createAccount returned no data");
-    }
-
-    sender = decodeFunctionResult({
-      abi: AccountFactoryArtifact.abi,
-      functionName: "createAccount",
-      data: senderCall.data,
-    }) as Hex;
-
-    const derivedAccountBytecode = await publicClient.getCode({ address: sender });
-    accountExists = !!derivedAccountBytecode && derivedAccountBytecode !== "0x";
+  if (!senderCall.data) {
+    throw new Error("AccountFactory createAccount returned no data");
   }
+
+  const sender = decodeFunctionResult({
+    abi: AccountFactoryArtifact.abi,
+    functionName: "createAccount",
+    data: senderCall.data,
+  }) as Hex;
+
+  const senderBytecode = await publicClient.getCode({ address: sender });
+  let accountExists = !!senderBytecode && senderBytecode !== "0x";
 
   if (accountExists) {
     const onchainOwner = (await publicClient.readContract({
