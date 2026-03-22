@@ -6,7 +6,11 @@
     "compile": "hardhat compile",
     "copy:abis": "node scripts/copy-abis.mjs",
     "deploy:account": "hardhat run scripts/account/deploy-account.ts --network arbitrum",
-    "deploy:gmx-executor": "hardhat run scripts/gmx/deploy-executor.ts --network arbitrum"
+    "deploy:gmx-executor": "hardhat run scripts/gmx/deploy-executor.ts --network arbitrum",
+    "deploy:gmx-executor:fuji": "hardhat run scripts/gmx/deploy-executor-fuji.ts --network avalancheFuji",
+    "add:gmx-forwarder:fuji": "hardhat run scripts/gmx/add-forwarder.ts --network avalancheFuji",
+    "set:gmx-forwarder:fuji": "hardhat run scripts/gmx/set-forwarder.ts --network avalancheFuji",
+    "set:gmx-order-config:fuji": "hardhat run scripts/gmx/set-order-config.ts --network avalancheFuji"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox-mocha-ethers": "^3.0.2",
