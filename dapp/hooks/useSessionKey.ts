@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { usePublicClient, useWalletClient } from "wagmi";
+import { useAccount, useChainId, usePublicClient, useWalletClient } from "wagmi";
 import {
   generateSessionKey,
   signUserOpWithSessionKey,
@@ -11,7 +11,7 @@ import {
 import { createSessionKeyUserOp } from "@/lib/userop/create-session-key-userop";
 import { getBundlerRpcRequest } from "@/lib/userop/bundler-rpc";
 
-const SESSION_KEY_STORAGE_KEY = "aleph_session_key";
+const SESSION_KEY_STORAGE_KEY_PREFIX = "aleph_session_key";
 
 type UserOpReceipt = {
   success: boolean;
@@ -50,6 +50,17 @@ export function useSessionKey(): UseSessionKeyReturn {
 
   const publicClient = usePublicClient();
   const { data: walletClient } = useWalletClient();
+  const { address } = useAccount();
+  const connectedChainId = useChainId();
+
+  const getStorageKey = useCallback(() => {
+    if (!address) {
+      return null;
+    }
+
+    const chainId = Number(connectedChainId ?? publicClient?.chain?.id ?? process.env.NEXT_PUBLIC_CHAIN_ID ?? 43113);
+    return `${SESSION_KEY_STORAGE_KEY_PREFIX}:${chainId}:${address.toLowerCase()}`;
+  }, [address, connectedChainId, publicClient]);
 
   const waitForUserOpReceipt = useCallback(
     async (opHash: `0x${string}`, timeoutMs: number = 120_000): Promise<UserOpReceipt> => {
@@ -81,14 +92,16 @@ export function useSessionKey(): UseSessionKeyReturn {
     [publicClient]
   );
 
-  // Load session from storage on mount
-  useEffect(() => {
-    loadSessionFromStorage();
-  }, []);
-
   const loadSessionFromStorage = useCallback(() => {
     try {
-      const stored = sessionStorage.getItem(SESSION_KEY_STORAGE_KEY);
+      const storageKey = getStorageKey();
+      if (!storageKey) {
+        setSessionKey(null);
+        setError(null);
+        return;
+      }
+
+      const stored = sessionStorage.getItem(storageKey);
       if (stored) {
         const key = deserializeSessionKey(stored);
         if (isSessionKeyValid(key)) {
@@ -96,14 +109,23 @@ export function useSessionKey(): UseSessionKeyReturn {
           setError(null);
         } else {
           // Expired, remove from storage
-          sessionStorage.removeItem(SESSION_KEY_STORAGE_KEY);
+          sessionStorage.removeItem(storageKey);
           setSessionKey(null);
         }
+      } else {
+        // No session for this account/chain
+        setSessionKey(null);
+        setError(null);
       }
     } catch (e) {
       setError(`Failed to load session: ${String(e)}`);
     }
-  }, []);
+  }, [getStorageKey]);
+
+  // Load session from storage whenever account/chain changes
+  useEffect(() => {
+    loadSessionFromStorage();
+  }, [loadSessionFromStorage]);
 
   const createSession = useCallback(async (
     contracts: { entryPoint: string; factory: string; paymaster: string; smartAccount: string },
@@ -141,7 +163,11 @@ export function useSessionKey(): UseSessionKeyReturn {
       }
 
       // 4. Store locally only after on-chain confirmation
-      sessionStorage.setItem(SESSION_KEY_STORAGE_KEY, serializeSessionKey(newSessionKey));
+      const storageKey = getStorageKey();
+      if (!storageKey) {
+        throw new Error("Wallet address unavailable while storing session key");
+      }
+      sessionStorage.setItem(storageKey, serializeSessionKey(newSessionKey));
       setSessionKey(newSessionKey);
       setError(null);
     } catch (e) {
@@ -150,13 +176,16 @@ export function useSessionKey(): UseSessionKeyReturn {
     } finally {
       setIsLoading(false);
     }
-  }, [publicClient, walletClient, waitForUserOpReceipt]);
+  }, [publicClient, walletClient, waitForUserOpReceipt, getStorageKey]);
 
   const revokeSession = useCallback(() => {
-    sessionStorage.removeItem(SESSION_KEY_STORAGE_KEY);
+    const storageKey = getStorageKey();
+    if (storageKey) {
+      sessionStorage.removeItem(storageKey);
+    }
     setSessionKey(null);
     setError(null);
-  }, []);
+  }, [getStorageKey]);
 
   const signWithSession = useCallback(
     async (userOpHash: `0x${string}`): Promise<`0x${string}`> => {

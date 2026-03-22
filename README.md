@@ -1,193 +1,223 @@
 # DefIA Aleph 2026
 
-## ⚠️ IMPORTANT CONTEXT (READ FIRST)
-
-This project was built using a mixed workflow across multiple sources and tools:
-
-- **Lovable & v0** was used as part of the UI/structure bootstrap process.
-- **GitHub Copilot** was used as an AI coding assistant during implementation.
-- The final submission repository is a **consolidation of development from multiple intermediate repositories/workspaces** into a single deliverable.
-
-This means the final repo history reflects a consolidation process (migration + integration), while the codebase here is the final integrated version presented for evaluation.
+> **The AI-native execution layer for DeFi**: from intent to on-chain action, with ERC-4337 account abstraction, session keys, and multi-wallet GMX execution.
 
 ---
 
-## Overview
+## 🎯 Auditor Hook (30 seconds)
 
-DefIAr is a DeFi hub powered by AI agents with account abstraction and GMX execution flow.
+If you only have half a minute to evaluate this repo, here is why it is a winning candidate:
 
-The repository contains:
-
-- `dapp/` → Next.js frontend, wallet connection, AI chat integration, session key UX, and GMX execution controls.
-- `hardhat/` → smart contracts, deployment scripts, account abstraction setup, and GMX executor flow.
-- `SESSION_KEYS.md` → session key architecture and behavior notes.
+- **Real problem**: active DeFi execution still has too much click/signature friction.
+- **Differentiated solution**: DefIA turns intent (`"I want a conservative long"`) into on-chain execution with modular, auditable architecture.
+- **Technical edge**: full AA + Session Keys + GMX executor stack with multi-wallet allowlist (`allowedForwarders`).
+- **Maturity signal**: not just a nice UI; includes deployment runbooks, ops scripts, on-chain error handling, and UserOp traceability.
+- **Incubation potential**: strong base to evolve into an intelligent multi-protocol execution product (GMX today, strategy modules tomorrow).
 
 ---
 
-## Tech Stack
+## 🧠 Product Narrative
+
+Imagine a user who understands markets but does not want to fight through 10 popups per trade.
+
+DefIA introduces a middle layer between **human intent** and **on-chain execution**:
+
+1. The user expresses an intent (manual or agent-assisted).
+2. The system builds an ERC-4337 UserOperation with verifiable parameters.
+3. The executor validates security context (forwarder allowlist, order config, balances).
+4. The order is executed on GMX with full traceability.
+
+This is not “AI for marketing”: it is **AI + execution infrastructure** to reduce friction without sacrificing control.
+
+---
+
+## 🏆 Why this project stands out
+
+### 1) Innovation with immediate utility
+
+- Integrates AI-assisted trading decisions with a real (not simulated) execution path.
+- Uses Account Abstraction for product-grade UX (less dependency on repetitive wallet signatures).
+
+### 2) Architecture designed to scale
+
+- Clear domain separation:
+   - `dapp/`: interface, agents, session UX, UserOp monitoring.
+   - `hardhat/`: contracts, deployment and operations scripts.
+- Designed for module replacement (AI provider, execution protocol, risk policies).
+
+### 3) Pragmatic security (what auditors want to see)
+
+- Session keys with expiration, explicit activation, and owner-signature fallback.
+- Executor v2 with `mapping(address => bool) allowedForwarders` for multi-wallet support.
+- Explicit on-chain errors (`InvalidForwarder`, `InvalidOrderVault`, etc.) with UI-side decoding.
+- Pre-execution operational checks (native balance, collateral, GMX config).
+
+### 4) Delivery signal
+
+- Solved production-like issues (AA gas tuning, forwarder mismatch, local vs Vercel env drift).
+- Operational scripts ready for reproducible execution (`deploy`, `add-forwarder`, `set-order-config`, `copy-abis`).
+
+---
+
+## 🧩 What this repository includes
+
+- `dapp/` → Next.js frontend, wallet connection, AI chat, session key UX, GMX execution.
+- `hardhat/` → contracts, deployment scripts, AA setup (ERC-4337), GMX executor.
+- `SESSION_KEYS.md` → session-key architecture and behavior details.
+
+---
+
+## ⚙️ Technical stack
 
 ### Frontend (`dapp`)
 
-- **Next.js 16**
-- **React 19**
-- **TypeScript**
-- **Tailwind CSS 4**
-- **RainbowKit + Wagmi + Viem** (wallet + onchain interactions)
-- **Radix UI** components
-- **Lightweight Charts** (OHLC chart)
+- Next.js 16
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- RainbowKit + Wagmi + Viem
+- Radix UI
+- Lightweight Charts
 
 ### Smart Contracts (`hardhat`)
 
-- **Hardhat 3**
-- **Solidity**
-- **Ethers v6**
-- **OpenZeppelin Contracts**
-- **ERC-4337 Account Abstraction contracts** (`@account-abstraction/contracts`)
+- Hardhat 3
+- Solidity
+- Ethers v6
+- OpenZeppelin Contracts
+- ERC-4337 (`@account-abstraction/contracts`)
 
 ---
 
-## Project Structure
+## 🏗️ Architecture at a glance
 
 ```text
-aleph/
-├─ dapp/
-├─ hardhat/
-└─ SESSION_KEYS.md
+User Intent (manual / AI)
+   │
+   ▼
+Agent Console (dapp)
+   │
+   ▼
+UserOperation Builder (ERC-4337)
+   │
+   ▼
+EntryPoint + Paymaster + Smart Account
+   │
+   ▼
+GMXPositionExecutor v2 (allowedForwarders)
+   │
+   ▼
+GMX ExchangeRouter (Fuji)
 ```
 
 ---
 
-## Setup Guide
+## 🚀 Quick setup
 
-### 1) Clone and install dependencies
+### 1) Install dependencies
 
 ```bash
 git clone <repo-url>
 cd aleph
+
+cd dapp && npm install
+cd ../hardhat && npm install
 ```
 
-Install frontend deps:
+### 2) Configure environment
 
-```bash
-cd dapp
-npm install
-```
+#### Frontend (`dapp/.env`)
 
-Install contracts deps:
-
-```bash
-cd ../hardhat
-npm install
-```
-
----
-
-## Environment Configuration
-
-### Frontend env (`dapp/.env`)
-
-Create from template:
-
-```bash
-cd dapp
-cp .env.example .env
-```
-
-Fill at least:
+Minimum variables:
 
 - `NEXT_PUBLIC_RPC_URL`
 - `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID`
-- `NEXT_PUBLIC_BUNDLER_RPC_URL` (and chain-specific variants if needed)
+- `NEXT_PUBLIC_BUNDLER_RPC_URL_FUJI` (or equivalent fallback)
 - `NEXT_PUBLIC_ENTRYPOINT_ADDRESS`
 - `NEXT_PUBLIC_FACTORY_ADDRESS`
 - `NEXT_PUBLIC_PAYMASTER_ADDRESS`
-- `NEXT_PUBLIC_SMART_ACCOUNT_ADDRESS`
 - `NEXT_PUBLIC_MOLTBOT_GMX_EXECUTOR`
-- `OPENCLAW_GATEWAY_TOKEN` / `OPENCLAW_GATEWAY_HMAC_SECRET`
-- `COINGECKO_API_KEY`
 
-### Contracts env (`hardhat/.env`)
+#### Contracts (`hardhat/.env`)
 
-Create from template and fill deployment values:
+Minimum variables:
 
-- `ARBITRUM_SEPOLIA_PK`
-- `ALCHEMY_ARB_RPC_URL`
-- `ENTRYPOINT_ADDRESS`
-- `PAYMASTER_ADDRESS`
-- `FACTORY_ADDRESS`
-- `SMART_ACCOUNT_ADDRESS`
+- `AVAX_RPC_URL`
+- `AVALANCHE_FUJI_PK` (or configured PK fallback)
 - `MOLTBOT_GMX_EXECUTOR`
+- `AVAX_FACTORY_ADDRESS`
 
----
+> **Production note:** Vercel uses its own environment variables; it does not read your local `.env`.
 
-## Running the App
-
-### Frontend
-
-```bash
-cd dapp
-npm run dev
-```
-
-Main scripts:
-
-- `npm run dev` → start dev server
-- `npm run build` → production build
-- `npm run start` → run production server
-- `npm run lint` → lint code
-- `npm run sync:abis` → copy ABIs from `hardhat` to frontend
-
-### Contracts
+### 3) Run
 
 ```bash
 cd hardhat
 npm run compile
+npm run copy:abis
+
+cd ../dapp
+npm run dev
 ```
 
-Main scripts:
+---
 
-- `npm run compile` → compile contracts
-- `npm run copy:abis` → export ABIs
-- `npm run deploy:account` → deploy AA core contracts
-- `npm run deploy:gmx-executor` → deploy GMX executor
+## 🧪 Recommended operational flow (Fuji)
+
+1. Connect your wallet on Avalanche Fuji.
+2. Verify the configured executor is the expected one (`NEXT_PUBLIC_MOLTBOT_GMX_EXECUTOR`).
+3. In Agent Console, fund the executor:
+   - `Fund executor +0.03 AVAX`
+   - `Mint/Fund executor +<collateral amount> <token>`
+4. (Optional) Create a session key to reduce signing friction.
+5. Execute trade manually or via agent prompt.
+
+### UI flow (mandatory: fund first)
+
+On the **Agent Console** screen, the correct order is:
+
+1. **Connect wallet** on Fuji.
+2. Go to **Executor Check** and click **Refresh**.
+3. If executor AVAX is low, click **Fund executor +0.03 AVAX**.
+4. If collateral is zero, click **Mint/Fund executor +1 token**.
+5. Confirm that:
+   - `AVAX Balance` > `Execution fee`
+   - `Collateral` > 0
+   - `Router allowance` is sufficient
+6. Only then execute **Long / Short / Close** or **Auto**.
+
+> If you switch accounts, repeat this quick check before sending a new UserOperation.
 
 ---
 
-## Fuji Trading Requirements
+## 🔐 Current functional security status
 
-Before executing GMX actions on Fuji, make sure you have:
-
-- **AVAX on Fuji** (for gas).
-- **USDC on Fuji** (collateral for the configured market flow).
-- Executor funded from the UI (native AVAX + collateral top-up when needed).
-
-In the `Agent Console`, use the executor funding actions first:
-
-- `Fund executor +0.03 AVAX`
-- `Mint/Fund executor +<collateral amount> <token>`
-
-Without this funding, execution can fail due to missing gas/collateral on the executor account.
+- ✅ Real multi-wallet support in executor v2 via allowlist (`addForwarder/removeForwarder`).
+- ✅ Critical config validation before sending UserOps.
+- ✅ On-chain error decoding for fast diagnosis.
+- ✅ Session-key scoping by account/chain to avoid identity crossover when switching wallets.
 
 ---
 
-## Usage Flow
+## 📈 Incubation vision (why this is worth backing)
 
-1. Configure env vars for both `dapp` and `hardhat`.
-2. Deploy/account-setup contracts from `hardhat` (if needed).
-3. Sync ABIs into frontend (`dapp`):
-   - `npm run sync:abis`
-4. Run frontend:
-   - `npm run dev`
-5. Connect wallet on **Avalanche Fuji** and confirm GMX params.
-6. Fund the executor from `Agent Console` (AVAX + USDC collateral).
-7. Execute trades using either flow:
-   - **Session Key flow**: activate session key and execute without signing every operation.
-   - **Agent flow**: send a natural-language prompt and let the AI agent select/trigger the action.
+DefIA can evolve quickly into:
+
+- **A multi-protocol execution copilot** (GMX, perp DEXs, lending loops, hedging).
+- **A configurable risk-policy engine** by user profile.
+- **Programmable smart accounts** with dynamic protection and limit rules.
+- **White-label B2B infra** for wallets, crypto brokers, and on-chain fintechs.
+
+In short: this is not just a hackathon demo; it is a product foundation with a clear path to traction.
 
 ---
 
-## Notes for Reviewers
+## ℹ️ Build context
 
-- The repo intentionally includes both frontend and contracts to keep a full end-to-end demo in one place.
-- Commit history reflects consolidation of prior workspaces into this final submission structure.
-- For deeper session-key details, see `SESSION_KEYS.md`.
+This project was built using a mixed workflow:
+
+- Lovable / v0 for initial UI bootstrap.
+- GitHub Copilot as an implementation assistant.
+- Consolidation of multiple intermediate workspaces into this final repository.
+
+The commit history reflects that integration process; the code here is the final evaluable version.

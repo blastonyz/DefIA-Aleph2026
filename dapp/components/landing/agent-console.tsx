@@ -950,7 +950,7 @@ export function AgentConsole() {
       <section id="agent-console" className="relative overflow-hidden bg-darker-bg py-24 lg:py-32">
         <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-cyan/10 blur-[120px]" />
         <div className="relative mx-auto w-full px-6 lg:w-10/12 xl:w-4/5">
-          <Card className="border-border/50 bg-dark-bg/80">
+          <Card className="rounded-3xl border-border/50 bg-dark-bg/80">
             <CardHeader>
               <CardTitle className="font-[family-name:var(--font-display)] text-2xl text-foreground md:text-3xl">
                 Moltbot Integration Console
@@ -977,7 +977,7 @@ export function AgentConsole() {
       </div>
 
         <div className="relative mx-auto w-full px-6 lg:w-10/12 xl:w-4/5">
-        <Card className="border-border/50 bg-dark-bg/80">
+        <Card className="rounded-3xl border-border/50 bg-dark-bg/80">
           <CardHeader>
             <CardTitle className="font-[family-name:var(--font-display)] text-2xl text-foreground md:text-3xl">
               Moltbot Integration Console
@@ -989,7 +989,7 @@ export function AgentConsole() {
 
           <CardContent>
             <form className="space-y-4" onSubmit={onSubmit}>
-              <div className="rounded-lg border border-border/50 bg-darker-bg p-4">
+              <div className="rounded-2xl border border-border/50 bg-darker-bg p-4">
                 <p className="mb-3 text-xs uppercase tracking-wide text-muted-foreground">Current operation</p>
                 <p className="text-sm text-foreground">
                   {selectedAction.toUpperCase()} · {actionSource.toUpperCase()}
@@ -1082,7 +1082,7 @@ export function AgentConsole() {
             </form>
 
             <div className="mt-6 grid gap-6 xl:grid-cols-2">
-              <div className="rounded-lg border border-border/50 bg-darker-bg p-4">
+              <div className="h-full rounded-3xl border border-border/50 bg-darker-bg p-4">
               <p className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">
                 Response{provider ? ` · provider: ${provider}` : ""}
               </p>
@@ -1095,7 +1095,7 @@ export function AgentConsole() {
               )}
               </div>
 
-            <div className="mt-6 rounded-lg border border-border/50 bg-darker-bg p-4">
+            <div className="h-full rounded-3xl border border-border/50 bg-darker-bg p-4">
               <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <p className="text-xs uppercase tracking-wide text-muted-foreground">GMX Params</p>
@@ -1141,9 +1141,9 @@ export function AgentConsole() {
               )}
             </div>
 
-              <div className="mt-6">
+              <div className="h-full rounded-3xl bg-[#faf4df] p-6 shadow-sm">
                 <div className="mb-4 flex items-center justify-between">
-                  <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-[#7a5649]">Executor Check</h2>
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#7a5649]">Executor Check</p>
                   <button
                     type="button"
                     onClick={() => void loadExecutorHealth()}
@@ -1161,7 +1161,7 @@ export function AgentConsole() {
                     {isExecutorHealthLoading ? "Updating..." : "Refresh"}
                   </button>
                 </div>
-                <div className="bg-[#faf4df] rounded-3xl p-6 shadow-sm flex flex-col gap-6">
+                <div className="flex h-full flex-col gap-6">
                   {executorHealthError ? (
                     <pre className="max-h-48 overflow-auto whitespace-pre-wrap break-all text-xs text-red-500">{executorHealthError}</pre>
                   ) : null}
@@ -1176,7 +1176,7 @@ export function AgentConsole() {
                           </div>
                         </div>
                         <div className="bg-[#f4eed9] p-4 rounded-2xl flex flex-col gap-1 border-b-2 border-[#a43700]/10">
-                          <span className="text-[10px] font-bold text-[#5a4138] uppercase">{executorHealth.collateralTokenSymbol ?? "Colateral"}</span>
+                            <span className="text-[10px] font-bold text-[#5a4138] uppercase">{executorHealth.collateralTokenSymbol ?? "Collateral"}</span>
                           <div className="flex items-baseline gap-1">
                             <span className={`text-xl font-extrabold ${executorHealth.collateralBalance !== null && executorHealth.collateralBalance > 0n ? "text-[#1e1c0f]" : "text-red-500"}`}>
                               {formatTokenAmount(executorHealth.collateralBalance, executorHealth.collateralTokenDecimals)}
@@ -1275,7 +1275,7 @@ export function AgentConsole() {
                 </div>
               </div>
 
-              <div className="rounded-3xl bg-[#faf4df] p-6 shadow-sm">
+              <div className="h-full rounded-3xl bg-[#faf4df] p-6 shadow-sm">
                 <div className="mb-4 flex items-center justify-between gap-3">
                   <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#7a5649]">Execution status</p>
                   <span
