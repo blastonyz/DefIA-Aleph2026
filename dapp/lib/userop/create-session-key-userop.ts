@@ -25,6 +25,10 @@ const SESSION_VERIFICATION_GAS_LIMIT = 30_000n;
 const SESSION_PRE_VERIFICATION_GAS = 60_000n;
 const SESSION_PAYMASTER_VERIFICATION_GAS_LIMIT = 20_000n;
 const SESSION_PAYMASTER_POST_OP_GAS_LIMIT = 30_000n;
+const SESSION_DEPLOY_VERIFICATION_GAS_LIMIT = 1_000_000n;
+const SESSION_DEPLOY_PRE_VERIFICATION_GAS = 160_000n;
+const SESSION_DEPLOY_PAYMASTER_VERIFICATION_GAS_LIMIT = 120_000n;
+const SESSION_DEPLOY_PAYMASTER_POST_OP_GAS_LIMIT = 80_000n;
 
 type ContractsConfig = {
   entryPoint: string;
@@ -116,8 +120,12 @@ export async function createSessionKeyUserOp(params: {
     nonce: toHex(nonce),
     callData: registrationCallData,
     callGasLimit: toHex(SESSION_CALL_GAS_LIMIT),
-    verificationGasLimit: toHex(SESSION_VERIFICATION_GAS_LIMIT),
-    preVerificationGas: toHex(SESSION_PRE_VERIFICATION_GAS),
+    verificationGasLimit: toHex(
+      accountExists ? SESSION_VERIFICATION_GAS_LIMIT : SESSION_DEPLOY_VERIFICATION_GAS_LIMIT
+    ),
+    preVerificationGas: toHex(
+      accountExists ? SESSION_PRE_VERIFICATION_GAS : SESSION_DEPLOY_PRE_VERIFICATION_GAS
+    ),
     maxFeePerGas: toHex(4_000_000_000n),
     maxPriorityFeePerGas: toHex(2_000_000_000n),
     signature: ("0x" + "ff".repeat(65)) as Hex,
@@ -137,8 +145,14 @@ export async function createSessionKeyUserOp(params: {
   if (usePaymaster) {
     userOp.paymaster = paymasterAddress;
     userOp.paymasterData = "0x";
-    userOp.paymasterVerificationGasLimit = toHex(SESSION_PAYMASTER_VERIFICATION_GAS_LIMIT);
-    userOp.paymasterPostOpGasLimit = toHex(SESSION_PAYMASTER_POST_OP_GAS_LIMIT);
+    userOp.paymasterVerificationGasLimit = toHex(
+      accountExists
+        ? SESSION_PAYMASTER_VERIFICATION_GAS_LIMIT
+        : SESSION_DEPLOY_PAYMASTER_VERIFICATION_GAS_LIMIT
+    );
+    userOp.paymasterPostOpGasLimit = toHex(
+      accountExists ? SESSION_PAYMASTER_POST_OP_GAS_LIMIT : SESSION_DEPLOY_PAYMASTER_POST_OP_GAS_LIMIT
+    );
   }
 
   // 5. Fetch fees
