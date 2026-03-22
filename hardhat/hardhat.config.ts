@@ -4,6 +4,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 const privateKey = process.env.ARBITRUM_SEPOLIA_PK || "";
+const fujiPrivateKey = process.env.AVALANCHE_FUJI_PK || privateKey;
 
 export default defineConfig({
   plugins: [hardhatToolboxMochaEthersPlugin],
@@ -32,6 +33,12 @@ export default defineConfig({
       chainType: "op",
       url: process.env.ALCHEMY_ARB_RPC_URL ?? "http://localhost:8545",
       accounts: [privateKey],
+    },
+    avalancheFuji: {
+      type: "http",
+      chainType: "l1",
+      url: process.env.AVAX_RPC_URL ?? "https://api.avax-test.network/ext/bc/C/rpc",
+      accounts: [fujiPrivateKey],
     },
   },
 });

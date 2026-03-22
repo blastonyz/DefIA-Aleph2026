@@ -114,7 +114,8 @@ const DIRECT_EXECUTION_CONSUMED_TOPIC = keccak256(
   stringToHex("DirectExecutionConsumed(uint8,bytes32,uint256,bool)")
 );
 const EXECUTOR_REASON_BY_SELECTOR: Record<string, string> = {
-  "0xb0618435": "InvalidForwarder",
+  "0xddef582c": "InvalidForwarder",
+  "0xb0618435": "InvalidForwarder", // legacy v1 selector (2-arg)
   "0x55f9dbeb": "InvalidAction",
   "0xa3a89de5": "InvalidOrderVault",
   "0x0e5b47e8": "InvalidExecutionFee",
@@ -259,10 +260,10 @@ function decodeReceiptReason(reason: unknown): string | null {
       data: reason as Hex,
     });
 
-    if (decoded.errorName === "InvalidForwarder" && Array.isArray(decoded.args) && decoded.args.length >= 2) {
+    if (decoded.errorName === "InvalidForwarder" && Array.isArray(decoded.args)) {
       const sender = String(decoded.args[0]);
-      const expected = String(decoded.args[1]);
-      return `InvalidForwarder: sender=${sender} expectedForwarder=${expected}`;
+      const extra = decoded.args.length >= 2 ? ` expectedForwarder=${String(decoded.args[1])}` : " (not in allowlist)";
+      return `InvalidForwarder: sender=${sender}${extra}`;
     }
 
     return `${decoded.errorName}${Array.isArray(decoded.args) ? ` args=${JSON.stringify(decoded.args)}` : ""}`;
@@ -375,20 +376,13 @@ async function readExecutorState(params: {
 }): Promise<{ forwarder: Hex | null; orderConfig: unknown; flavor: "current" }> {
   const { publicClient, executorAddress } = params;
 
-  const [forwarder, orderConfig] = await Promise.all([
-    publicClient.readContract({
-      address: executorAddress,
-      abi: GMXPositionExecutorArtifact.abi,
-      functionName: "forwarder",
-    }) as Promise<Hex>,
-    publicClient.readContract({
-      address: executorAddress,
-      abi: GMXPositionExecutorArtifact.abi,
-      functionName: "orderConfig",
-    }),
-  ]);
+  const orderConfig = await publicClient.readContract({
+    address: executorAddress,
+    abi: GMXPositionExecutorArtifact.abi,
+    functionName: "orderConfig",
+  });
 
-  return { forwarder, orderConfig, flavor: "current" };
+  return { forwarder: null, orderConfig, flavor: "current" };
 }
 
 function pickActionFromAgentText(text: string): TradeAction | null {
