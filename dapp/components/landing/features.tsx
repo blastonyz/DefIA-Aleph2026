@@ -75,40 +75,40 @@ export function Features() {
                 </div>
 
                 <p className="mb-3 font-heading text-sm font-extrabold leading-tight text-foreground">
-                  Hola, ¿qué querés
+                  Hi, what would you
                   <br />
-                  hacer hoy?
+                  like to do today?
                 </p>
 
                 <div className="mb-3 rounded-2xl bg-dark-accent p-4">
-                  <p className="text-[9px] uppercase tracking-[0.1em] text-muted">Balance total</p>
+                  <p className="text-[9px] uppercase tracking-[0.1em] text-muted">Total balance</p>
                   <p className="font-heading text-[28px] font-extrabold leading-none text-primary-foreground">$2,450.80</p>
-                  <p className="mt-1 text-[11px] font-semibold text-primary">▲ Ganaste $2.80 hoy</p>
+                  <p className="mt-1 text-[11px] font-semibold text-primary">▲ You earned $2.80 today</p>
                 </div>
 
                 <div className="mb-3 grid grid-cols-2 gap-2">
                   <div className="row-span-2 rounded-xl bg-primary p-3">
                     <p className="text-[8px] uppercase tracking-[0.1em] text-light-tint/80">Autopilot</p>
                     <div className="my-2 h-9 w-9 rounded-full bg-dark-accent" />
-                    <p className="font-heading text-sm font-extrabold text-primary-foreground">Activo</p>
-                    <p className="mt-1 text-[9px] text-light-tint/80">6 días</p>
+                    <p className="font-heading text-sm font-extrabold text-primary-foreground">Active</p>
+                    <p className="mt-1 text-[9px] text-light-tint/80">6 days</p>
                   </div>
                   <div className="rounded-xl bg-light-tint p-3">
-                    <p className="text-[8px] uppercase tracking-[0.1em] text-dark-accent/70">Hoy</p>
+                    <p className="text-[8px] uppercase tracking-[0.1em] text-dark-accent/70">Today</p>
                     <p className="font-heading text-lg font-extrabold text-foreground">+$0.03</p>
                   </div>
                   <div className="rounded-xl bg-muted-tint p-3">
-                    <p className="text-[8px] uppercase tracking-[0.1em] text-dark-accent/70">Estrategia</p>
-                    <p className="font-heading text-[11px] font-extrabold text-foreground">Ahorro Seguro</p>
+                    <p className="text-[8px] uppercase tracking-[0.1em] text-dark-accent/70">Strategy</p>
+                    <p className="font-heading text-[11px] font-extrabold text-foreground">Safe Savings</p>
                   </div>
                 </div>
 
-                <p className="mb-1.5 font-heading text-[11px] font-bold text-foreground">Elegí una estrategia</p>
+                <p className="mb-1.5 font-heading text-[11px] font-bold text-foreground">Choose a strategy</p>
 
                 <div className="mb-1.5 flex items-center justify-between rounded-xl border-l-[3px] border-green-500 bg-light-tint px-3 py-2">
                   <div className="flex items-center gap-2">
                     <span className="h-2 w-2 rounded-full bg-green-500" />
-                    <span className="font-heading text-[11px] font-bold text-foreground">Ahorro Seguro</span>
+                    <span className="font-heading text-[11px] font-bold text-foreground">Safe Savings</span>
                   </div>
                   <span className="font-heading text-[13px] font-extrabold text-green-600">+4.2%</span>
                 </div>
@@ -116,7 +116,7 @@ export function Features() {
                 <div className="flex items-center justify-between rounded-xl border-l-[3px] border-amber-500 bg-muted-tint px-3 py-2">
                   <div className="flex items-center gap-2">
                     <span className="h-2 w-2 rounded-full bg-amber-500" />
-                    <span className="font-heading text-[11px] font-bold text-foreground">Crecimiento</span>
+                    <span className="font-heading text-[11px] font-bold text-foreground">Growth</span>
                   </div>
                   <span className="font-heading text-[13px] font-extrabold text-amber-600">+8.1%</span>
                 </div>

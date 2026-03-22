@@ -95,9 +95,9 @@ const DEFAULT_GMX_SIZE_DELTA_USD = "100000000000000000000";
 const DEFAULT_GMX_TRIGGER_PRICE = "0";
 const DEFAULT_GMX_ACCEPTABLE_PRICE = "100000000000000000000";
 const FUJI_WETH_USDC_PRESET: GmxPreset = {
-  id: "fuji-weth-usdc",
-  label: "Fuji WETH/USDC",
-  description: "Preset oficial del repo GMX para Fuji con market WETH/WETH/USDC.",
+  id: "fuji-wavax-usdc",
+  label: "Fuji WAVAX/USDC",
+  description: "Official GMX preset for Fuji with WAVAX/USDC market.",
   config: {
     market: "0xbf338a6C595f06B7Cfff2FA8c958d49201466374",
     collateralToken: "0x3eBDeaA0DB3FfDe96E7a0DBBAFEC961FC50F725F",
@@ -313,7 +313,7 @@ function formatUnknownError(error: unknown): string {
   try {
     return JSON.stringify(error, null, 2);
   } catch {
-    return "Error desconocido";
+    return `Unknown error`;
   }
 }
 
@@ -394,13 +394,13 @@ async function readExecutorState(params: {
 function pickActionFromAgentText(text: string): TradeAction | null {
   const normalized = text.toLowerCase();
 
-  if (/\bclose\b|\bcerrar\b|\bcierre\b/.test(normalized)) {
+  if (/\bclose\b|\bcierre\b/.test(normalized)) {
     return "close";
   }
   if (/\bshort\b/.test(normalized)) {
     return "short";
   }
-  if (/\blong\b|\bcomprar\b|\balcista\b/.test(normalized)) {
+  if (/\blong\b|\bbuy\b/.test(normalized)) {
     return "long";
   }
 
@@ -424,7 +424,7 @@ export function AgentConsole() {
   const { data: walletClient } = useWalletClient();
   const { isSessionActive, signWithSession, createSession, revokeSession, isLoading: isSessionLoading, error: sessionError, sessionOpHash } = useSessionKey();
   const [isMounted, setIsMounted] = useState(false);
-  const [prompt, setPrompt] = useState("Dame una estrategia conservadora de yield en Avalanche para empezar hoy.");
+  const [prompt, setPrompt] = useState("Give me a conservative yield strategy on Avalanche to start today.");
   const [walletAddress, setWalletAddress] = useState("");
   const [chainId, setChainId] = useState(String(DEFAULT_CHAIN_ID));
   const [response, setResponse] = useState("");
@@ -711,7 +711,7 @@ export function AgentConsole() {
 
   const fundExecutor = async () => {
     if (!walletClient || !publicClient || !address) {
-      setExecutorHealthError("Wallet client no disponible para fondear el executor.");
+      setExecutorHealthError("Wallet client not available to fund the executor.");
       return;
     }
 
@@ -738,12 +738,12 @@ export function AgentConsole() {
 
   const fundExecutorCollateral = async () => {
     if (!walletClient || !publicClient || !address) {
-      setExecutorHealthError("Wallet client no disponible para fondear colateral.");
+      setExecutorHealthError("Wallet client not available to fund collateral.");
       return;
     }
 
     if (!executorHealth?.collateralTokenAddress) {
-      setExecutorHealthError("No hay collateral token configurado para fondear.");
+      setExecutorHealthError("No collateral token configured for funding.");
       return;
     }
 
@@ -831,9 +831,9 @@ export function AgentConsole() {
 
     try {
       const autoPrompt = [
-        "Sos un agente de trading. Elegí exactamente una acción: LONG, SHORT o CLOSE.",
-        "Respondé en una sola línea empezando por ACTION: LONG|SHORT|CLOSE y luego un motivo breve.",
-        `Contexto usuario: ${prompt}`,
+        "You are a trading agent. Choose exactly one action: LONG, SHORT, or CLOSE.",
+        "Respond in a single line starting with ACTION: LONG|SHORT|CLOSE and then a brief reason.",
+        `User context: ${prompt}`,
       ].join("\n");
 
       const result = await fetch("/api/moltbot/chat", {
@@ -880,7 +880,7 @@ export function AgentConsole() {
 
   const executeTrade = async (action: TradeAction) => {
     if (userOpStatus === "pending") {
-      setExecutionError("Ya hay una UserOperation pendiente. Espera confirmación antes de enviar otra.");
+      setExecutionError("There is already a pending UserOperation. Wait for confirmation before sending another.");
       return;
     }
 
@@ -892,17 +892,17 @@ export function AgentConsole() {
     setUserOpStatus("idle");
 
     if (!isConnected) {
-      setExecutionError("Conecta la wallet antes de ejecutar una operación.");
+      setExecutionError("Connect the wallet before executing an operation.");
       return;
     }
 
     if (!isSupportedChain) {
-      setExecutionError("Cambia a la red configurada para operar.");
+      setExecutionError("Switch to the configured network to operate.");
       return;
     }
 
     if (!publicClient || !walletClient || !address) {
-      setExecutionError("Wallet client no disponible. Reconecta la wallet.");
+      setExecutionError("Wallet client not available. Reconnect the wallet.");
       return;
     }
 
@@ -961,7 +961,7 @@ export function AgentConsole() {
               <CardTitle className="font-[family-name:var(--font-display)] text-2xl text-foreground md:text-3xl">
                 Moltbot Integration Console
               </CardTitle>
-              <CardDescription>Cargando consola...</CardDescription>
+              <CardDescription>Loading console...</CardDescription>
             </CardHeader>
           </Card>
         </div>
@@ -989,14 +989,14 @@ export function AgentConsole() {
               Moltbot Integration Console
             </CardTitle>
             <CardDescription>
-              Prueba la conexión de tu dapp con Moltbot desde este frontend sin exponer el token.
+              Test your dapp connection with Moltbot from this frontend without exposing the token.
             </CardDescription>
           </CardHeader>
 
           <CardContent>
             <form className="space-y-4" onSubmit={onSubmit}>
               <div className="rounded-lg border border-border/50 bg-darker-bg p-4">
-                <p className="mb-3 text-xs uppercase tracking-wide text-muted-foreground">Operacion actual</p>
+                <p className="mb-3 text-xs uppercase tracking-wide text-muted-foreground">Current operation</p>
                 <p className="text-sm text-foreground">
                   {selectedAction.toUpperCase()} · {actionSource.toUpperCase()}
                 </p>
@@ -1043,7 +1043,7 @@ export function AgentConsole() {
                   {isAutoLoading || isExecuting ? (
                     <span className="inline-flex items-center gap-2">
                       <Spinner />
-                      Ejecutando...
+                      Executing...
                     </span>
                   ) : (
                     "Auto"
@@ -1067,7 +1067,7 @@ export function AgentConsole() {
               <Textarea
                 value={prompt}
                 onChange={(event) => setPrompt(event.target.value)}
-                placeholder="Escribe qué quieres que haga el agente"
+                placeholder="Write what you want the agent to do"
                 className="min-h-32"
               />
 
@@ -1079,10 +1079,10 @@ export function AgentConsole() {
                 {isLoading ? (
                   <span className="inline-flex justify-center items-center gap-2">
                     <Spinner />
-                    Consultando Moltbot...
+                    Consulting Moltbot...
                   </span>
                 ) : (
-                  "Enviar"
+                  "Send"
                 )}
               </Button>
             </form>
@@ -1090,14 +1090,14 @@ export function AgentConsole() {
             <div className="mt-6 grid gap-6 xl:grid-cols-2">
               <div className="rounded-lg border border-border/50 bg-darker-bg p-4">
               <p className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">
-                Respuesta{provider ? ` · provider: ${provider}` : ""}
+                Response{provider ? ` · provider: ${provider}` : ""}
               </p>
               {error ? (
                 <p className="text-sm text-red-400">{error}</p>
               ) : response ? (
                 <p className="whitespace-pre-wrap text-sm text-foreground">{response}</p>
               ) : (
-                <p className="text-sm text-muted-foreground">Aún no hay respuesta.</p>
+                <p className="text-sm text-muted-foreground">No response yet.</p>
               )}
               </div>
 
@@ -1105,7 +1105,7 @@ export function AgentConsole() {
               <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
                 <div>
                   <p className="text-xs uppercase tracking-wide text-muted-foreground">GMX Params</p>
-                  <p className="text-sm text-muted-foreground">Elegí un preset o ajustá market, collateral y montos antes de ejecutar.</p>
+                  <p className="text-sm text-muted-foreground">Choose a preset or adjust market, collateral, and amounts before executing.</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <Button type="button" variant="secondary" className={`h-auto px-5 py-2.5 ${warmSecondaryButtonClass}`} onClick={() => applyGmxPreset(FUJI_WETH_USDC_PRESET)}>
@@ -1141,9 +1141,9 @@ export function AgentConsole() {
                 </div>
               </div>
               {gmxConfigIssues.length > 0 ? (
-                <pre className="mt-3 max-h-40 overflow-auto whitespace-pre-wrap break-all text-xs text-amber-300">{`Faltan o estan mal estos valores:\n- ${gmxConfigIssues.join("\n- ")}`}</pre>
+                <pre className="mt-3 max-h-40 overflow-auto whitespace-pre-wrap break-all text-xs text-amber-300">{`Missing or incorrect values:\n- ${gmxConfigIssues.join("\n- ")}`}</pre>
               ) : (
-                <p className="mt-3 text-xs text-green-400">Configuracion GMX lista para enviar.</p>
+                <p className="mt-3 text-xs text-green-400">GMX config ready to submit.</p>
               )}
             </div>
 
@@ -1164,7 +1164,7 @@ export function AgentConsole() {
                         <path d="M8 16H3v5"/>
                       </svg>
                     )}
-                    {isExecutorHealthLoading ? "Actualizando..." : "Refresh"}
+                    {isExecutorHealthLoading ? "Updating..." : "Refresh"}
                   </button>
                 </div>
                 <div className="bg-[#faf4df] rounded-3xl p-6 shadow-sm flex flex-col gap-6">
@@ -1219,12 +1219,12 @@ export function AgentConsole() {
                       {executorHealth.recentExecution ? (
                         <div className="rounded-2xl bg-[#f4eed9] p-4 text-xs text-[#5a4138] flex flex-col gap-1.5">
                           <p className="font-bold text-[#1e1c0f]">
-                            Última ejecución: {describeAction(executorHealth.recentExecution.action)} · {formatShortHash(executorHealth.recentExecution.orderKey)}
+                            Last execution: {describeAction(executorHealth.recentExecution.action)} · {formatShortHash(executorHealth.recentExecution.orderKey)}
                           </p>
-                          <p>Tx: {formatShortHash(executorHealth.recentExecution.txHash)} · bloque {executorHealth.recentExecution.blockNumber.toString()}</p>
+                          <p>Tx: {formatShortHash(executorHealth.recentExecution.txHash)} · block {executorHealth.recentExecution.blockNumber.toString()}</p>
                           <p>sizeDeltaUsd: {executorHealth.recentExecution.sizeDeltaUsd.toString()} · {executorHealth.recentExecution.isLong ? "LONG" : "SHORT"}</p>
                           {executorHealth.collateralBalance === 0n ? (
-                            <p className="text-amber-600 font-medium">Colateral consumido por la última orden GMX — esperado tras ejecución exitosa.</p>
+                            <p className="text-amber-600 font-medium">Collateral consumed by the last GMX order — expected after successful execution.</p>
                           ) : null}
                         </div>
                       ) : null}
@@ -1236,9 +1236,9 @@ export function AgentConsole() {
                           className={`w-full py-4 h-auto ${warmPrimaryButtonClass}`}
                         >
                           {isFundingExecutor ? (
-                            <span className="inline-flex items-center gap-2"><Spinner />Fondeando...</span>
+                            <span className="inline-flex items-center gap-2"><Spinner />Funding...</span>
                           ) : (
-                            "Fondear executor +0.03 AVAX"
+                            "Fund executor +0.03 AVAX"
                           )}
                         </Button>
                         <Button
@@ -1248,9 +1248,9 @@ export function AgentConsole() {
                           className={`w-full py-4 h-auto ${warmSecondaryButtonClass}`}
                         >
                           {isFundingCollateral ? (
-                            <span className="inline-flex items-center gap-2"><Spinner />Fondeando colateral...</span>
+                            <span className="inline-flex items-center gap-2"><Spinner />Funding collateral...</span>
                           ) : (
-                            `${connectedChainId === avalancheFuji.id ? "Mint" : "Fondear"} executor +${EXECUTOR_COLLATERAL_TOP_UP_AMOUNT} ${executorHealth.collateralTokenSymbol ?? "token"}`
+                            `${connectedChainId === avalancheFuji.id ? "Mint" : "Fund"} executor +${EXECUTOR_COLLATERAL_TOP_UP_AMOUNT} ${executorHealth.collateralTokenSymbol ?? "token"}`
                           )}
                         </Button>
                         {executorFundingTxHash ? (
@@ -1276,14 +1276,14 @@ export function AgentConsole() {
                       </div>
                     </>
                   ) : (
-                    <p className="text-sm text-center italic text-[#5a4138]/60 py-4">Sin datos del executor todavía.</p>
+                    <p className="text-sm text-center italic text-[#5a4138]/60 py-4">No executor data yet.</p>
                   )}
                 </div>
               </div>
 
               <div className="rounded-3xl bg-[#faf4df] p-6 shadow-sm">
                 <div className="mb-4 flex items-center justify-between gap-3">
-                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#7a5649]">Estado de ejecución</p>
+                  <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#7a5649]">Execution status</p>
                   <span
                     className={`rounded-full px-2.5 py-1 text-[10px] font-bold tracking-wide ${
                       userOpStatus === "included"
@@ -1325,7 +1325,7 @@ export function AgentConsole() {
                           <span>{formatShortHash(executionTxHash as Hex)}</span>
                         </a>
                       ) : (
-                        <div className="rounded-2xl bg-[#f4eed9] p-4 text-sm text-[#5a4138]">Tx pendiente de confirmación</div>
+                        <div className="rounded-2xl bg-[#f4eed9] p-4 text-sm text-[#5a4138]">Tx pending confirmation</div>
                       )}
 
                       {executionBlockNumber ? (
@@ -1334,7 +1334,7 @@ export function AgentConsole() {
                           <span className="font-bold">{executionBlockNumber}</span>
                         </div>
                       ) : (
-                        <div className="rounded-2xl bg-[#f4eed9] p-4 text-sm text-[#5a4138]">Bloque no disponible aún</div>
+                        <div className="rounded-2xl bg-[#f4eed9] p-4 text-sm text-[#5a4138]">Block not available yet</div>
                       )}
                     </div>
 
@@ -1363,7 +1363,7 @@ export function AgentConsole() {
                     ) : null}
                   </div>
                 ) : (
-                  <p className="rounded-2xl bg-[#f4eed9] p-4 text-sm italic text-[#5a4138]/70">Sin ejecución reciente.</p>
+                  <p className="rounded-2xl bg-[#f4eed9] p-4 text-sm italic text-[#5a4138]/70">No recent execution.</p>
                 )}
               </div>
             </div>
@@ -1375,7 +1375,7 @@ export function AgentConsole() {
               ) : null}
               <div className="flex flex-wrap items-center gap-3">
                 <span className={`text-sm font-medium ${isSessionActive ? "text-green-400" : "text-muted-foreground"}`}>
-                  {isSessionActive ? "✓ Activa — trades sin firma" : "Inactiva — cada trade pide firma"}
+                  {isSessionActive ? "✓ Active — trades without signature" : "Inactive — each trade requires signature"}
                 </span>
                 {!isSessionActive ? (
                   <Button
@@ -1386,14 +1386,14 @@ export function AgentConsole() {
                     onClick={() => createSession(contracts)}
                   >
                     {isSessionLoading ? (
-                      <span className="inline-flex items-center gap-2"><Spinner />Registrando...</span>
+                      <span className="inline-flex items-center gap-2"><Spinner />Registering...</span>
                     ) : (
-                      "Activar Session Key"
+                      "Activate Session Key"
                     )}
                   </Button>
                 ) : (
                   <Button type="button" variant="outline" className={`h-auto px-5 py-2.5 ${warmSecondaryButtonClass}`} onClick={revokeSession}>
-                    Revocar
+                    Revoke
                   </Button>
                 )}
               </div>
@@ -1404,7 +1404,7 @@ export function AgentConsole() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Registro: {sessionOpHash}
+                  Receipt: {sessionOpHash}
                 </a>
               ) : null}
             </div>

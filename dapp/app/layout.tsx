@@ -30,7 +30,7 @@ const syne = Syne({
 })
 
 export const metadata: Metadata = {
-  title: 'DefIA — Decentralized Intelligence Architecture',
+  title: 'DEFIAR',
   description: 'Experience the next evolution of DeFi management. Autonomous agents optimizing your portfolio across liquid markets in real-time.',
   generator: 'v0.app',
   icons: {

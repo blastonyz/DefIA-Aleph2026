@@ -62,7 +62,7 @@ export function OhlcChart() {
         const json = (await response.json()) as OhlcResponse;
 
         if (!response.ok) {
-          throw new Error(json.error ?? "No se pudo cargar OHLC");
+          throw new Error(json.error ?? "Could not load OHLC");
         }
 
         const parsed = json.data.map((point) => ({
@@ -78,7 +78,7 @@ export function OhlcChart() {
         }
       } catch (requestError) {
         if (!isCancelled) {
-          setError(requestError instanceof Error ? requestError.message : "Error cargando chart");
+          setError(requestError instanceof Error ? requestError.message : "Error loading chart");
           setPoints([]);
         }
       } finally {
@@ -175,13 +175,13 @@ export function OhlcChart() {
         </div>
       </div>
 
-      {isLoading ? <p className="mb-3 text-sm text-muted-foreground">Cargando velas...</p> : null}
+      {isLoading ? <p className="mb-3 text-sm text-muted-foreground">Loading candles...</p> : null}
       {error ? <p className="mb-3 text-sm text-red-400">{error}</p> : null}
 
       <div ref={containerRef} className="w-full overflow-hidden rounded-md border border-border/40" />
 
       <p className="mt-3 text-xs text-muted-foreground">
-        Fuente: CoinGecko ({selectedAsset?.label ?? "N/A"} / USD)
+        Source: CoinGecko ({selectedAsset?.label ?? "N/A"} / USD)
       </p>
     </div>
   );
